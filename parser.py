@@ -6,6 +6,33 @@ from TreeNode import *
 #rootNode = ""
 previousParent = {}
 
+def getNodeType(line):
+    match = re.search(':[rmog]* ',line)
+    if match:
+        type = match.group(0)
+        if len(type) == 3:
+            if type[1] == 'm':
+                return "Mandatory"
+            elif type[1] == 'g':
+                return "Featured Group"
+            elif type[1] == 'o':
+                return "Optional"
+            elif type[1] == 'r':
+                return "Root"
+        elif len(type) == 2:
+            if type[1] == ' ':
+                return "Group"
+    else:
+        raise Exception('Exception : Invalid Node Structure')
+
+
+def getNodeName(line):
+    pattern = re.compile(':[rmog]* ')
+    match = pattern.split(line)[1]
+    name = match[:match.index('(')]
+    return name
+
+
 def parseConstraints(structure):
     lines = structure.split("\n")
     for line in lines:
@@ -23,26 +50,30 @@ def parseTree(structure):
             match = re.search('\(.*\)',line)
             if match:
                 id = match.group(0)[1:-1]
+                nodeType = getNodeType(line)
+                name = getNodeName(line)
+                if len(name) == 0:
+                    name = id
                 #print id, id.count("_")
                 if count == 0:
                     previousId = id.count("_")
-                    treeNode = TreeNode(id, id,"temp")
+                    treeNode = TreeNode(id, name, nodeType)
                     previousParent[previousId] = treeNode
                     rootNode = treeNode
                 else :
                     currentIdLen = id.count("_")
                     if currentIdLen > previousId:
-                        treeNode = TreeNode(id, id, "temp")
+                        treeNode = TreeNode(id, name, nodeType)
                         previousParent[currentIdLen] = treeNode
                         previousParent[previousId].children.append(treeNode)
                         previousId = currentIdLen
                     elif currentIdLen < previousId:
-                        treeNode = TreeNode(id, id, "temp")
+                        treeNode = TreeNode(id, name, nodeType)
                         previousParent[currentIdLen] = treeNode
                         previousParent[currentIdLen - 1].children.append(treeNode)
                         previousId = currentIdLen
                     elif currentIdLen == previousId:
-                        treeNode = TreeNode(id, id, "temp")
+                        treeNode = TreeNode(id, name, nodeType)
                         previousParent[currentIdLen] = treeNode
                         previousParent[currentIdLen - 1].children.append(treeNode)
                         previousId = currentIdLen
@@ -54,7 +85,7 @@ def parseTree(structure):
 
 def dfsTree(treeNode, tabCount):
     tabs = "\t" * tabCount
-    print tabs, treeNode.id
+    print tabs, treeNode.id , treeNode.name, "(" + treeNode.type + ")"
     for i in xrange(len(treeNode.children)):
         dfsTree(treeNode.children[i] ,tabCount+1)
 
