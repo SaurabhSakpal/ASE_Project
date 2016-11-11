@@ -6,7 +6,7 @@ class SplotModel:
     def __init__(self, name):
         self.root = None
         self.modelName = name
-        self.constraints = []
+        self.crossTreeConstraints = []
         self.treeNodeMap = {}
 
     def addTreeNodeToMap(self, treeNode):
@@ -16,7 +16,7 @@ class SplotModel:
         return self.treeNodeMap[nodeId]
 
     def setConstraints(self, constraintList):
-        self.constraints = constraintList
+        self.crossTreeConstraints = constraintList
 
     def updateRootNode(self, rootNode):
         self.root = rootNode
@@ -28,5 +28,5 @@ class SplotModel:
             self.printTree(treeNode.children[i], tabCount + 1)
 
     def printConstraints(self):
-        for constraint in self.constraints:
+        for constraint in self.crossTreeConstraints:
             print constraint
