@@ -30,13 +30,11 @@ class SPLOTParser:
         else:
             raise Exception('Exception : Invalid Node Structure')
 
-
     def getNodeName(self, line):
         pattern = re.compile(':[rmog]* ')
         match = pattern.split(line)[1]
         name = match[:match.index('(')]
         return name
-
 
     def parseConstraints(self, structure, splotModel):
         lines = structure.split("\n")
@@ -52,6 +50,14 @@ class SPLOTParser:
                 constraintList.append(Constraint(constraintId, clauseList, treeNodeIdList, splotModel))
         return constraintList
 
+    def findCardinality(self, line):
+        match = re.search('\[[\d]+,[\d*]\]', line)
+        if match:
+            cardinalityStr = match.group(0)
+            cardinalityList =[int(i) if i != '*' else -1 for i in [cardinalityStr.split(",")[0][1:].strip(), cardinalityStr.split(",")[1][:-1].strip()] ]
+            return cardinalityList
+        else:
+            raise Exception('Exception : Invalid Node Structure')
 
     def parseTree(self, structure, splotModel):
         lines = structure.split("\n")
@@ -69,28 +75,27 @@ class SPLOTParser:
                     if len(name) == 0:
                         name = id
                     #print id, id.count("_")
+                    if nodeType == "Featured Group":
+                        self.findCardinality(line)
+                    treeNode = TreeNode(id, name, nodeType) if nodeType != "Featured Group" else FeaturedGroupTreeNode(id, name, nodeType, *self.findCardinality(line))
                     if count == 0:
                         previousId = id.count("_")
-                        treeNode = TreeNode(id, name, nodeType)
                         self.previousParent[previousId] = treeNode
                         rootNode = treeNode
                         splotModel.addTreeNodeToMap(treeNode)
                     else :
                         currentIdLen = id.count("_")
                         if currentIdLen > previousId:
-                            treeNode = TreeNode(id, name, nodeType)
                             self.previousParent[currentIdLen] = treeNode
                             self.previousParent[previousId].children.append(treeNode)
                             previousId = currentIdLen
                             splotModel.addTreeNodeToMap(treeNode)
                         elif currentIdLen < previousId:
-                            treeNode = TreeNode(id, name, nodeType)
                             self.previousParent[currentIdLen] = treeNode
                             self.previousParent[currentIdLen - 1].children.append(treeNode)
                             previousId = currentIdLen
                             splotModel.addTreeNodeToMap(treeNode)
                         elif currentIdLen == previousId:
-                            treeNode = TreeNode(id, name, nodeType)
                             self.previousParent[currentIdLen] = treeNode
                             self.previousParent[currentIdLen - 1].children.append(treeNode)
                             previousId = currentIdLen
@@ -100,7 +105,6 @@ class SPLOTParser:
                 else:
                     raise Exception('EXCEPTION: ID not present on Node')
         return rootNode
-
 
     def parse(self, modelFile):
         tree = ET.parse(modelFile)

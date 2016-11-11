@@ -23,7 +23,7 @@ class SplotModel:
 
     def printTree(self, treeNode, tabCount):
         tabs = "\t" * tabCount
-        print tabs, treeNode.id, treeNode.name, "(" + treeNode.type + ")"
+        print tabs, treeNode
         for i in xrange(len(treeNode.children)):
             self.printTree(treeNode.children[i], tabCount + 1)
 
