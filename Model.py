@@ -26,3 +26,7 @@ class SplotModel:
         print tabs, treeNode.id, treeNode.name, "(" + treeNode.type + ")"
         for i in xrange(len(treeNode.children)):
             self.printTree(treeNode.children[i], tabCount + 1)
+
+    def printConstraints(self):
+        for constraint in self.constraints:
+            print constraint

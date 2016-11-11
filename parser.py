@@ -9,7 +9,7 @@ from Constraint import *
 class SPLOTParser:
 
     def __init__(self):
-        previousParent = {}
+        self.previousParent = {}
 
     def getNodeType(self, line):
         match = re.search(':[rmog]* ',line)
@@ -110,19 +110,22 @@ class SPLOTParser:
         print "MODEL NAME: ", modelName
         splotModel = SplotModel(modelName)
         for child in xmlRoot:
-            print child.tag, child.text
+            #print child.tag, child.text
             if child.tag == "feature_tree":
                 rootNode = self.parseTree(child.text, splotModel);
+                splotModel.updateRootNode(rootNode)
             elif child.tag == "constraints":
                 constraintList = self.parseConstraints(child.text, splotModel)
                 splotModel.setConstraints(constraintList)
-        splotModel.printTree(rootNode, 0)
+        return splotModel
 
 
 def main():
     assert len(sys.argv) == 2, "SPLOT Parser takes path to model.xml file as argument"
     modelFile = sys.argv[1]
-    SPLOTParser().parse(modelFile)
+    model = SPLOTParser().parse(modelFile)
+    model.printTree(model.root, 0)
+    model.printConstraints()
 
 if __name__ == "__main__":
     main()

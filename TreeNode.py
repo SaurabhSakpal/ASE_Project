@@ -4,3 +4,6 @@ class TreeNode:
         self.type = type
         self.id = id
         self.children = []
+
+    def __str__(self):
+        return self.id+ " " + self.name +" (" + self.type + ")"

@@ -3,3 +3,7 @@ class Constraint:
         self.constraintId = constraintId
         self.clauses = clauses
         self.treeNodeList = [splotModel.getTreeNodeFromId(nodeId) for nodeId in treeNodeList]
+
+    def __str__(self):
+
+        return self.constraintId + " " + str(self.clauses)
