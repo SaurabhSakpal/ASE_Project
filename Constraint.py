@@ -5,5 +5,4 @@ class Constraint:
         self.treeNodeList = [splotModel.getTreeNodeFromId(nodeId) for nodeId in treeNodeList]
 
     def __str__(self):
-
         return self.constraintId + " " + str(self.clauses)

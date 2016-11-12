@@ -36,6 +36,14 @@ class SPLOTParser:
         name = match[:match.index('(')]
         return name
 
+    @staticmethod
+    def getConstraintsFromCNF(cnf, constraintId, splotModel):
+        clauseList = [clause.strip() for clause in cnf.split("or")]
+        treeNodeIdList = [clause if (clause.find("~") == -1) else clause[1:] for clause in clauseList]
+        return Constraint(constraintId, clauseList, treeNodeIdList, splotModel)
+
+
+
     def parseConstraints(self, structure, splotModel):
         lines = structure.split("\n")
         constraintList = []
@@ -45,9 +53,10 @@ class SPLOTParser:
                 splitArr = line.split(":")
                 constraintId = splitArr[0]
                 cnf = splitArr[1]
-                clauseList = [clause.strip() for clause in cnf.split("or")]
-                treeNodeIdList = [clause if (clause.find("~") == -1) else clause[1:] for clause in clauseList]
-                constraintList.append(Constraint(constraintId, clauseList, treeNodeIdList, splotModel))
+                #clauseList = [clause.strip() for clause in cnf.split("or")]
+                #treeNodeIdList = [clause if (clause.find("~") == -1) else clause[1:] for clause in clauseList]
+                #constraintList.append(Constraint(constraintId, clauseList, treeNodeIdList, splotModel))
+                constraintList.append(self.getConstraintsFromCNF(cnf, constraintId, splotModel))
         return constraintList
 
     def findCardinality(self, line):
@@ -88,16 +97,19 @@ class SPLOTParser:
                         if currentIdLen > previousId:
                             self.previousParent[currentIdLen] = treeNode
                             self.previousParent[previousId].children.append(treeNode)
+                            treeNode.updateParentNode(self.previousParent[previousId])
                             previousId = currentIdLen
                             splotModel.addTreeNodeToMap(treeNode)
                         elif currentIdLen < previousId:
                             self.previousParent[currentIdLen] = treeNode
                             self.previousParent[currentIdLen - 1].children.append(treeNode)
+                            treeNode.updateParentNode(self.previousParent[currentIdLen - 1])
                             previousId = currentIdLen
                             splotModel.addTreeNodeToMap(treeNode)
                         elif currentIdLen == previousId:
                             self.previousParent[currentIdLen] = treeNode
                             self.previousParent[currentIdLen - 1].children.append(treeNode)
+                            treeNode.updateParentNode(self.previousParent[currentIdLen - 1])
                             previousId = currentIdLen
                             splotModel.addTreeNodeToMap(treeNode)
                     #print previousParent
@@ -129,7 +141,11 @@ def main():
     modelFile = sys.argv[1]
     model = SPLOTParser().parse(modelFile)
     model.printTree(model.root, 0)
-    model.printConstraints()
+    print "\n\n"
+    model.printCrossTreeConstraints()
+    model.generateTreeStructureConstraints(model.root)
+    print "\n\n"
+    model.printTreeConstraints()
 
 if __name__ == "__main__":
     main()

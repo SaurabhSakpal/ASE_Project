@@ -1,5 +1,6 @@
 from TreeNode import *
 from Constraint import *
+from TreeStructureConstraint import *
 
 
 class SplotModel:
@@ -8,6 +9,7 @@ class SplotModel:
         self.modelName = name
         self.crossTreeConstraints = []
         self.treeNodeMap = {}
+        self.treeConstraints = []
 
     def addTreeNodeToMap(self, treeNode):
         self.treeNodeMap[treeNode.id] = treeNode
@@ -27,6 +29,16 @@ class SplotModel:
         for i in xrange(len(treeNode.children)):
             self.printTree(treeNode.children[i], tabCount + 1)
 
-    def printConstraints(self):
+    def printCrossTreeConstraints(self):
         for constraint in self.crossTreeConstraints:
             print constraint
+
+    def printTreeConstraints(self):
+        for constraint in self.treeConstraints:
+            print constraint
+
+    def generateTreeStructureConstraints(self,treeNode):
+        for i in xrange(len(treeNode.children)):
+            child = treeNode.children[i]
+            self.treeConstraints.extend(TreeConstraintGenerator.getConstraints(treeNode, child, self))
+            self.generateTreeStructureConstraints(treeNode.children[i])
