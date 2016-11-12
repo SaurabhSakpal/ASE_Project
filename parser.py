@@ -4,6 +4,7 @@ import re
 from TreeNode import *
 from Model import *
 from Constraint import *
+from Simulator import *
 
 
 class SPLOTParser:
@@ -142,12 +143,15 @@ def main():
     model = SPLOTParser().parse(modelFile)
     model.printTree(model.root, 0)
     print "\n\n"
-    model.printCrossTreeConstraints()
-    model.generateTreeStructureConstraints(model.root)
+    #model.printCrossTreeConstraints()
+    #model.generateTreeStructureConstraints(model.root)
     print "\n\n"
-    model.printTreeConstraints()
+    #model.printTreeConstraints()
     print "\n\n"
-    model.printStatistics()
+    #model.printStatistics()
+
+    simulator = Simulator(model)
+    simulator.generatePoint()
 
 if __name__ == "__main__":
     main()
