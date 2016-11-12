@@ -7,6 +7,28 @@ class Simulator:
     def __init__(self, splotModel):
         self.model = splotModel
 
+    def getOrRelationshipChoiceString(self, numberOfChild):
+        binaryString = ""
+        for i in xrange(numberOfChild):
+            if random.random() < 0.5:
+                binaryString += "1"
+            else:
+                binaryString += "0"
+        if binaryString.find("1") != -1:
+            #print binaryString
+            return binaryString
+        else:
+            index = random.choice(xrange(numberOfChild))
+            binaryString = ""
+            for i in xrange(numberOfChild):
+                if i != index:
+                    binaryString += "0"
+                else:
+                    binaryString += "1"
+            #print binaryString
+            return binaryString
+
+
 
     def dfs(self, treeNode, point, parentDecision):
         if parentDecision and treeNode.type == "Mandatory":
@@ -36,9 +58,10 @@ class Simulator:
                         point.append([treeNode.children[i].id, False])
                         self.dfs(treeNode.children[i], point, parentDecision)
             elif treeNode.minCardinality == 1 and treeNode.maxCardinality == -1:
+                choiceString = self.getOrRelationshipChoiceString(len(treeNode.children))
                 for i in xrange(len(treeNode.children)):
-                    if random.random() < 0.5:
-                        parentDecision =  True
+                    if choiceString[i] == '1':
+                        parentDecision = True
                         point.append([treeNode.children[i].id, True])
                         self.dfs(treeNode.children[i], point, parentDecision)
                     else:
@@ -63,7 +86,12 @@ class Simulator:
                 self.dfs(treeNode.children[i], point, parentDecision)
 
 
-    def generatePoint(self, count=1):
-        point = []
-        self.dfs(self.model.root, point, True)
-        print point
+    def generateNPoints(self, count=1):
+        n_point_list = []
+        for i in xrange(count):
+            point = []
+            self.dfs(self.model.root, point, True)
+            print point
+            print "\n"
+            n_point_list.append(point)
+        return n_point_list

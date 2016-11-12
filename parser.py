@@ -142,16 +142,19 @@ def main():
     modelFile = sys.argv[1]
     model = SPLOTParser().parse(modelFile)
     model.printTree(model.root, 0)
-    print "\n\n"
-    #model.printCrossTreeConstraints()
-    #model.generateTreeStructureConstraints(model.root)
-    print "\n\n"
-    #model.printTreeConstraints()
-    print "\n\n"
+    print "\n\n ALL CROSS TREE CONSTRAINTS"
+    model.printCrossTreeConstraints()
+    print "\n Generating Tree level Constraints using grammar ... "
+    model.generateTreeStructureConstraints(model.root)
+    print "\n\n ALL TREE STRUCTURE CONSTRAINTS"
+    model.printTreeConstraints()
+    #print "\n\n"
     #model.printStatistics()
 
     simulator = Simulator(model)
-    simulator.generatePoint()
+    n = 5
+    print "\n\nGENERATING " + str(n) + " POINTS"
+    simulator.generateNPoints(n)
 
 if __name__ == "__main__":
     main()
