@@ -42,3 +42,9 @@ class SplotModel:
             child = treeNode.children[i]
             self.treeConstraints.extend(TreeConstraintGenerator.getConstraints(treeNode, child, self))
             self.generateTreeStructureConstraints(treeNode.children[i])
+
+    def printStatistics(self):
+        print "MODEL ("+self.modelName+") STATISTICS\n"
+        print "Total Cross Tree Constraints : " + str(len(self.crossTreeConstraints))
+        print "Total Tree Structure  Constraints : " + str(len(self.treeConstraints))
+        print "Total Nodes in the tree : " + str(len(self.treeNodeMap))

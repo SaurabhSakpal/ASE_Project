@@ -146,6 +146,8 @@ def main():
     model.generateTreeStructureConstraints(model.root)
     print "\n\n"
     model.printTreeConstraints()
+    print "\n\n"
+    model.printStatistics()
 
 if __name__ == "__main__":
     main()
