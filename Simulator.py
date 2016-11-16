@@ -1,6 +1,7 @@
 from TreeNode import *
 from Model import *
 from Constraint import *
+from Point import *
 import random
 
 class Simulator:
@@ -93,5 +94,5 @@ class Simulator:
             self.dfs(self.model.root, point, True)
             print point
             print "\n"
-            n_point_list.append(point)
+            n_point_list.append(Point(self.model, point))
         return n_point_list
