@@ -2,6 +2,7 @@ import sys
 import numpy as np
 from parser import SPLOTParser
 from Simulator import Simulator
+from Optimisers import *
 
 def main():
     assert len(sys.argv) == 2, "SPLOT Parser takes path to model.xml file as argument"
@@ -32,6 +33,8 @@ def main():
         cost.append(point.objectives.cost)
         violations.append(point.objectives.constraintsFailed)
         num_features.append(point.objectives.featureRichness)
+
+    runOptimiser(points, simulator, model)
 
     print 'Mean cost', np.mean(cost)
     print 'Var cost', np.var(cost)

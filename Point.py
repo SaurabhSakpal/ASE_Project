@@ -1,6 +1,6 @@
 from Objective import *
 
-class Point:
+class Point(object):
     def __init__(self, model, value):
         self.model = model
         self.value = value

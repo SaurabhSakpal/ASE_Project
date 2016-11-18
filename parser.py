@@ -2,9 +2,12 @@ import xml.etree.ElementTree as ET
 import re
 import utils
 from TreeNode import *
-from Model import SplotModel
-from Constraint import Constraint
 from TreeStructureConstraint import TreeConstraintGenerator
+from Model import *
+from Constraint import *
+from Simulator import *
+from Optimisers import *
+
 
 class SPLOTParser:
 
