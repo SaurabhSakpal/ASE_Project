@@ -1,22 +1,19 @@
-from Model import *
-from parser import *
-from Constraint import *
-from TreeNode import *
+import utils
 
 class TreeConstraintGenerator:
-
+    
     @staticmethod
     def getConstraintId(parentId, childId):
         return "c:" + parentId + " " + childId
 
     @staticmethod
     def getMandatoryConstraints(parentId, childId, splotModel):
-        return [SPLOTParser.getConstraintsFromCNF(parentId+" or ~"+childId, TreeConstraintGenerator.getConstraintId(parentId, childId), splotModel),
-                SPLOTParser.getConstraintsFromCNF("~"+ parentId + " or " + childId, TreeConstraintGenerator.getConstraintId(parentId, childId), splotModel)]
+        return [utils.getConstraintsFromCNF(parentId+" or ~"+childId, TreeConstraintGenerator.getConstraintId(parentId, childId), splotModel),
+                utils.getConstraintsFromCNF("~"+ parentId + " or " + childId, TreeConstraintGenerator.getConstraintId(parentId, childId), splotModel)]
 
     @staticmethod
     def getOptionalConstraints(parentId, childId, splotModel):
-        return [SPLOTParser.getConstraintsFromCNF(parentId + " or ~" + childId, TreeConstraintGenerator.getConstraintId(parentId, childId), splotModel)]
+        return [utils.getConstraintsFromCNF(parentId + " or ~" + childId, TreeConstraintGenerator.getConstraintId(parentId, childId), splotModel)]
 
     @staticmethod
     def getFeatureGroupConstraints(parentNode, childNode, splotModel):
@@ -26,7 +23,7 @@ class TreeConstraintGenerator:
             if childNode.minCardinality == 1 and (childNode.maxCardinality == -1 or childNode.maxCardinality == 1):
                 for i in childNode.children:
                     if i.type != "Featured Group":
-                        constraints.append(SPLOTParser.getConstraintsFromCNF(parentNode.id + " or ~" + i.id, TreeConstraintGenerator.getConstraintId(parentNode.id, childNode.id), splotModel))
+                        constraints.append(utils.getConstraintsFromCNF(parentNode.id + " or ~" + i.id, TreeConstraintGenerator.getConstraintId(parentNode.id, childNode.id), splotModel))
                     else:
                         raise Exception('Exception : Invalid Node Structure | Nested Featured Group Node')
                 idlist = [i.id for i in childNode.children if i.type != "Featured Group"]
@@ -35,21 +32,21 @@ class TreeConstraintGenerator:
                     cnf = cnf + " or " + id
                 cnf = "~" + parentNode.id + cnf
                 #print cnf
-                constraints.append(SPLOTParser.getConstraintsFromCNF(cnf, TreeConstraintGenerator.getConstraintId(parentNode.id, childNode.id), splotModel))
+                constraints.append(utils.getConstraintsFromCNF(cnf, TreeConstraintGenerator.getConstraintId(parentNode.id, childNode.id), splotModel))
             if childNode.minCardinality == 1 and childNode.maxCardinality == 1:
                 idlist = [i.id for i in childNode.children if i.type != "Featured Group"]
                 cnf_1 = ""
                 for id in idlist:
                     cnf_1 = cnf_1 + "~" + id + (" or " if id != idlist[-1] else "")
                 #print cnf_1
-                constraints.append(SPLOTParser.getConstraintsFromCNF(cnf_1, TreeConstraintGenerator.getConstraintId(
+                constraints.append(utils.getConstraintsFromCNF(cnf_1, TreeConstraintGenerator.getConstraintId(
                     parentNode.id, childNode.id), splotModel))
                 for index in range(len(idlist)):
                     cnf_2 = ""
                     for id in idlist:
                         cnf_2 = cnf_2 + ("~" if id != idlist[index] else "") + id + (" or " if id != idlist[-1] else "")
                     #print cnf_2
-                    constraints.append(SPLOTParser.getConstraintsFromCNF(cnf_2, TreeConstraintGenerator.getConstraintId(parentNode.id, childNode.id), splotModel))
+                    constraints.append(utils.getConstraintsFromCNF(cnf_2, TreeConstraintGenerator.getConstraintId(parentNode.id, childNode.id), splotModel))
         return constraints
 
     @staticmethod

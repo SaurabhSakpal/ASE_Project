@@ -19,19 +19,19 @@
 	:m Software Requirement Specification and Validation(_r_3)
 		:m Software Requirement Specification(_r_3_4)
 		:o Operational Prototyping(_r_3_5)
-		:m Software Requirement Validation(_r_3_6)
+		:m Software Requirement Validation(_r_3_6) 
 			:g (_r_3_6_7) [1,1] 
-				: Prototype Based Validation(_r_3_6_7_8)
-				: Internal Validation(_r_3_6_7_9)
+				: Prototype Based Validation(_r_3_6_7_8) $1060$
+				: Internal Validation(_r_3_6_7_9) $1020$
 	:m Roles(_r_10)
-		:m Analyst(_r_10_11)
-		:m Designer(_r_10_12)
-		:m Programmer(_r_10_22)
+		:m Analyst(_r_10_11) $1050$
+		:m Designer(_r_10_12) $1080$
+		:m Programmer(_r_10_22) $10100$
 	:m WorkProducts(_r_14)
-		:m User Requirements Specification(_r_14_16)
-		:m Software Requirements Specification(_r_14_17)
-		:m Log(_r_14_19)
-		:o Operational Prototype(_r_14_21)
+		:m User Requirements Specification(_r_14_16) $1050$
+		:m Software Requirements Specification(_r_14_17) $1030$
+		:m Log(_r_14_19) $1010$
+		:o Operational Prototype(_r_14_21) $1020$
 </feature_tree>
 <constraints>
 constraint_1:_r_3_5 or ~_r_3_6_7_8

@@ -1,8 +1,4 @@
-from TreeNode import *
-from Constraint import *
-from TreeStructureConstraint import *
-
-
+from TreeStructureConstraint import TreeConstraintGenerator
 class SplotModel:
     def __init__(self, name):
         self.root = None

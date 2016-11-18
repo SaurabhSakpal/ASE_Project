@@ -1,11 +1,10 @@
 import xml.etree.ElementTree as ET
-import sys
 import re
+import utils
 from TreeNode import *
-from Model import *
-from Constraint import *
-from Simulator import *
-
+from Model import SplotModel
+from Constraint import Constraint
+from TreeStructureConstraint import TreeConstraintGenerator
 
 class SPLOTParser:
 
@@ -37,14 +36,6 @@ class SPLOTParser:
         name = match[:match.index('(')]
         return name
 
-    @staticmethod
-    def getConstraintsFromCNF(cnf, constraintId, splotModel):
-        clauseList = [clause.strip() for clause in cnf.split("or")]
-        treeNodeIdList = [clause if (clause.find("~") == -1) else clause[1:] for clause in clauseList]
-        return Constraint(constraintId, clauseList, treeNodeIdList, splotModel)
-
-
-
     def parseConstraints(self, structure, splotModel):
         lines = structure.split("\n")
         constraintList = []
@@ -57,7 +48,7 @@ class SPLOTParser:
                 #clauseList = [clause.strip() for clause in cnf.split("or")]
                 #treeNodeIdList = [clause if (clause.find("~") == -1) else clause[1:] for clause in clauseList]
                 #constraintList.append(Constraint(constraintId, clauseList, treeNodeIdList, splotModel))
-                constraintList.append(self.getConstraintsFromCNF(cnf, constraintId, splotModel))
+                constraintList.append(utils.getConstraintsFromCNF(cnf, constraintId, splotModel))
         return constraintList
 
     def findCardinality(self, line):
@@ -87,7 +78,11 @@ class SPLOTParser:
                     #print id, id.count("_")
                     if nodeType == "Featured Group":
                         self.findCardinality(line)
-                    treeNode = TreeNode(id, name, nodeType) if nodeType != "Featured Group" else FeaturedGroupTreeNode(id, name, nodeType, *self.findCardinality(line))
+
+                    cost_match = re.search('\$\d*\$', line)
+                    cost = float(cost_match.group()[1:-1]) if cost_match else 0.0
+                    treeNode = TreeNode(id, name, nodeType, cost) if nodeType != "Featured Group" else FeaturedGroupTreeNode(id, name, nodeType, *self.findCardinality(line))
+                    
                     if count == 0:
                         previousId = id.count("_")
                         self.previousParent[previousId] = treeNode
@@ -135,26 +130,3 @@ class SPLOTParser:
                 constraintList = self.parseConstraints(child.text, splotModel)
                 splotModel.setConstraints(constraintList)
         return splotModel
-
-
-def main():
-    assert len(sys.argv) == 2, "SPLOT Parser takes path to model.xml file as argument"
-    modelFile = sys.argv[1]
-    model = SPLOTParser().parse(modelFile)
-    model.printTree(model.root, 0)
-    print "\n\n ALL CROSS TREE CONSTRAINTS"
-    model.printCrossTreeConstraints()
-    print "\n Generating Tree level Constraints using grammar ... "
-    model.generateTreeStructureConstraints(model.root)
-    print "\n\n ALL TREE STRUCTURE CONSTRAINTS"
-    model.printTreeConstraints()
-    #print "\n\n"
-    #model.printStatistics()
-
-    simulator = Simulator(model)
-    n = 5
-    print "\n\nGENERATING " + str(n) + " POINTS"
-    simulator.generateNPoints(n)
-
-if __name__ == "__main__":
-    main()

@@ -1,10 +1,11 @@
 class TreeNode:
-    def __init__(self, id, name, type):
+    def __init__(self, id, name, type, cost=0.0):
         self.name = name
         self.type = type
         self.id = id
         self.parentNode = None
         self.children = []
+        self.cost = cost
 
     def __str__(self):
         return self.id+ " " + self.name +" (" + self.type + ") " + (self.parentNode.id if self.parentNode != None else "")

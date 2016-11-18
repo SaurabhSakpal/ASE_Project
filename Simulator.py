@@ -1,8 +1,5 @@
-from TreeNode import *
-from Model import *
-from Constraint import *
-from Point import *
 import random
+from Point import Point
 
 class Simulator:
     def __init__(self, splotModel):
