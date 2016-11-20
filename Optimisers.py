@@ -4,19 +4,19 @@ from deap import tools
 
 def getIndividualPoint(simulator):
     pointList = simulator.generateNPoints()
-    print "\n\n --------------------------------\n"
-    print pointList[0].value
+    #print "\n\n --------------------------------\n"
+    #print pointList[0].value
     pointList[0].evaluateObjectives()
-    print pointList[0].objectives
+    #print pointList[0].objectives
     ind = [1 if i[1] == True else 0 for i in pointList[0].value]
-    print ind
+    #print ind
     return ind
 
 def evaluateObjectives(model, ind1):
     cost = evaluateCost(ind1, model)
     featureRichness = evaluateFeatureRichness(ind1)
     constraintsFailed = evaluateConstraintsFailed(ind1, model)
-    return (cost, featureRichness, constraintsFailed)
+    return (cost, constraintsFailed,featureRichness)
 
 
 def evaluateCost(ind1, model):
@@ -49,6 +49,10 @@ def evaluateFeatureRichness(ind1):
     """ Code for calculating Feature Richness of a point goes here """
     return sum(ind1)
 
+def printPopulation(pop):
+    for i in pop:
+        print str(i) + " : " + str(i.fitness.values)
+
 
 
 def runOptimiser(simulator, model):
@@ -58,12 +62,27 @@ def runOptimiser(simulator, model):
     toolbox.register("splot_point", getIndividualPoint, simulator)
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.splot_point)
     toolbox.register("evaluate", evaluateObjectives, model)
+    toolbox.register("select", tools.selNSGA2)
     #ind1 = toolbox.individual()
     #print ind1
     #print ind1.fitness.valid
-    MU = 1
+    MU = 10
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
-    print "\n\n\n ## \n"
-    print pop
-    print toolbox.evaluate(pop[0])
+    #print "\n\n\n ## \n"
+    #print pop[0]
+    #print toolbox.evaluate(pop[0])
+    #print pop[0].fitness.valid
+
+    invalid_ind = [ind for ind in pop if not ind.fitness.valid]
+    fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+    for ind, fit in zip(invalid_ind, fitnesses):
+        ind.fitness.values = fit
+
+    printPopulation(pop)
+    #print pop[0].fitness.valid
+    # This is just to assign the crowding distance to the individuals
+    # no actual selection is done
+    pop = toolbox.select(pop, 4)
+    print "\n After Selecting \n"
+    printPopulation(pop)
