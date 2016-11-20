@@ -48,3 +48,11 @@ def evaluateFeatureRichness(ind1):
 def printPopulation(pop):
     for i in pop:
         print str(i) + " : " + str(i.fitness.values)
+
+
+def mate(model, ind1):
+    """ Logic for mate/crossover goes here  """
+
+def mutate(model, ind1):
+    """ Logic for mutation goes here """
+    
