@@ -6,6 +6,7 @@ class SplotModel:
         self.crossTreeConstraints = []
         self.treeNodeMap = {}
         self.treeConstraints = []
+        self.nodeOrder = []
 
     def addTreeNodeToMap(self, treeNode):
         self.treeNodeMap[treeNode.id] = treeNode
@@ -18,6 +19,7 @@ class SplotModel:
 
     def updateRootNode(self, rootNode):
         self.root = rootNode
+        self.populateNodeOrder(self.root)
 
     def printTree(self, treeNode, tabCount):
         tabs = "\t" * tabCount
@@ -44,3 +46,10 @@ class SplotModel:
         print "Total Cross Tree Constraints : " + str(len(self.crossTreeConstraints))
         print "Total Tree Structure  Constraints : " + str(len(self.treeConstraints))
         print "Total Nodes in the tree : " + str(len(self.treeNodeMap))
+
+    def populateNodeOrder(self, treeNode):
+        if treeNode.type != "Featured Group":
+            self.nodeOrder.append(treeNode.id)
+        for i in xrange(len(treeNode.children)):
+            self.populateNodeOrder(treeNode.children[i])
+

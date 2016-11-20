@@ -89,7 +89,7 @@ class Simulator:
         for i in xrange(count):
             point = []
             self.dfs(self.model.root, point, True)
-            print point
+            #print point
             print "\n"
             n_point_list.append(Point(self.model, point))
         return n_point_list

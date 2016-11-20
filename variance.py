@@ -24,17 +24,18 @@ def main():
     violations = []
     num_features = []
 
-    print "\n\nGENERATING " + str(n) + " POINTS"
-    points = simulator.generateNPoints(n)
-    for i,point in enumerate(points):
+    #print "\n\nGENERATING " + str(n) + " POINTS"
+    #points = simulator.generateNPoints(n)
+    #print model.nodeOrder
+    #for i,point in enumerate(points):
         # print '*******POINT '+str(i)+' ********'
-        point.evaluateObjectives()
-        print point.objectives
+        #point.evaluateObjectives()
+        #print point.objectives
         #cost.append(point.objectives.cost)
         #violations.append(point.objectives.constraintsFailed)
         #num_features.append(point.objectives.featureRichness)
 
-    runOptimiser(points, simulator, model)
+    runOptimiser(simulator, model)
 
     #print 'Mean cost', np.mean(cost)
     #print 'Var cost', np.var(cost)
