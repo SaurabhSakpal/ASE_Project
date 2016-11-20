@@ -50,9 +50,13 @@ def printPopulation(pop):
         print str(i) + " : " + str(i.fitness.values)
 
 
-def mate(model, ind1):
+def matePoints(model, ind1, ind2):
     """ Logic for mate/crossover goes here  """
+    ind1[len(ind1)-3] = 1
+    ind2[len(ind2) - 3] = 1
 
-def mutate(model, ind1):
+
+def mutatePoints(model, ind1):
     """ Logic for mutation goes here """
-    
+    ind1[len(ind1) - 1] = 1
+
