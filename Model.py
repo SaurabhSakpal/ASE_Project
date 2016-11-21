@@ -7,6 +7,7 @@ class SplotModel:
         self.treeNodeMap = {}
         self.treeConstraints = []
         self.nodeOrder = []
+        self.featureFailureCount = {}
 
     def addTreeNodeToMap(self, treeNode):
         self.treeNodeMap[treeNode.id] = treeNode

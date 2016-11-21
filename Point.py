@@ -30,7 +30,14 @@ class Point(object):
                 if (clause[0] =='~' and node_id not in leaves) or (clause[0] !='~' and node_id in leaves):
                     isTrue = isTrue or True
             if not isTrue:
-                    violations += 1
+                violations += 1
+                for i in self.value:
+                    node_id = i[0]
+                    if i[1]:
+                        if node_id in self.model.featureFailureCount:
+                            self.model.featureFailureCount[node_id] += 1
+                        else:
+                            self.model.featureFailureCount[node_id] = 1
         #print 'find violations'
         return violations
 

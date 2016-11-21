@@ -37,6 +37,13 @@ def evaluateConstraintsFailed(ind1, model):
                 isTrue = isTrue or True
         if not isTrue:
             violations += 1
+            for index in xrange(len(ind1)):
+                node_id = model.nodeOrder[index]
+                if ind1[index] == 1:
+                    if node_id in model.featureFailureCount:
+                        model.featureFailureCount[node_id] += 1
+                    else:
+                        model.featureFailureCount[node_id] = 1
     # print 'find violations'
     return violations
 
