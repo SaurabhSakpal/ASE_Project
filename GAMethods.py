@@ -2,7 +2,7 @@ def getIndividualPoint(simulator):
     pointList = simulator.generateNPoints()
     #print "\n\n --------------------------------\n"
     #print pointList[0].value
-    pointList[0].evaluateObjectives()
+    #pointList[0].evaluateObjectives()
     #print pointList[0].objectives
     ind = [1 if i[1] == True else 0 for i in pointList[0].value]
     #print ind
@@ -44,7 +44,6 @@ def evaluateConstraintsFailed(ind1, model):
                         model.featureFailureCount[node_id] += 1
                     else:
                         model.featureFailureCount[node_id] = 1
-    # print 'find violations'
     return violations
 
 

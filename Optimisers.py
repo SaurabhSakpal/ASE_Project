@@ -18,7 +18,7 @@ def nsga2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 12
+    MU = 4
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     # print "\n\n\n ## \n"
@@ -38,7 +38,7 @@ def nsga2(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 12
+    NGEN = 1
 
     for gen in range(1, NGEN):
         # Vary the population

@@ -47,6 +47,8 @@ def main():
     # plt.show()
     # plt.scatter(violations,num_features)
     # plt.show()
+    print "\n\n\n"
+    print sorted(model.featureFailureCount.items())
 
 if __name__ == "__main__":
     main()

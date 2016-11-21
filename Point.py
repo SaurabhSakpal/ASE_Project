@@ -38,7 +38,6 @@ class Point(object):
                             self.model.featureFailureCount[node_id] += 1
                         else:
                             self.model.featureFailureCount[node_id] = 1
-        #print 'find violations'
         return violations
 
     def evaluateFeatureRichness(self):
