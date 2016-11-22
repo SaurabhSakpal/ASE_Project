@@ -38,7 +38,7 @@ def nsga2(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 1
+    NGEN = 10
 
     for gen in range(1, NGEN):
         # Vary the population
