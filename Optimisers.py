@@ -3,7 +3,7 @@ from deap import creator
 from deap import tools
 from GAMethods import *
 import random
-
+import matplotlib.pyplot as plt
 
 def nsga2(simulator, model):
     creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0), crowding_dist=None)
@@ -18,7 +18,7 @@ def nsga2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 4
+    MU = 20
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     # print "\n\n\n ## \n"
@@ -38,7 +38,7 @@ def nsga2(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 10
+    NGEN = 100
 
     for gen in range(1, NGEN):
         # Vary the population
@@ -83,4 +83,8 @@ def pso():
 
 
 def runOptimiser(simulator, model):
-    nsga2(simulator, model)
+   pop = nsga2(simulator, model)
+   cost = [t.fitness.values[0] for t in pop]
+   fr = [t.fitness.values[2] for t in pop]
+   plt.scatter(cost,fr)
+   plt.show()

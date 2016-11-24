@@ -84,7 +84,7 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
         point.append([treeNode.id, nodeDecisions[treeNode.id]])
         parentDecision = True
         for i in xrange(len(treeNode.children)):
-            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions,isMutated)
+            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
     elif parentDecision and treeNode.type == "Optional":
         if not isMutated:
             if random.random() < 0.8:
@@ -178,52 +178,72 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
             dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
 
 
-def dfs(treeNode, point, parentDecision):
+def dfs_mate(treeNode, point, parentDecision, dadDecisions, momDecisions, selectedParent):
     if parentDecision and treeNode.type == "Mandatory":
-        point.append([treeNode.id, True])
-        parentDecision = True
-        for i in xrange(len(treeNode.children)):
-            dfs(treeNode.children[i], point, parentDecision)
-    elif parentDecision and treeNode.type == "Optional":
-        if random.random() < 0.5:
-            parentDecision = True
+        if selectedParent == 1:
+            point.append([treeNode.id, dadDecisions[treeNode.id]])
+            parentDecision = dadDecisions[treeNode.id]
+            for i in xrange(len(treeNode.children)):
+                dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, 1)
+        elif selectedParent == 2:
+            point.append([treeNode.id, momDecisions[treeNode.id]])
+            parentDecision = momDecisions[treeNode.id]
+            for i in xrange(len(treeNode.children)):
+                dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, 2)
+        elif selectedParent == 0:
             point.append([treeNode.id, True])
-        else:
-            parentDecision = False
-            point.append([treeNode.id, False])
-        for i in xrange(len(treeNode.children)):
-            dfs(treeNode.children[i], point, parentDecision)
+            parentDecision = True
+            for i in xrange(len(treeNode.children)):
+                dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, 0)
+    elif parentDecision and treeNode.type == "Optional":
+        if selectedParent == 1:
+            parentDecision = dadDecisions[treeNode.id]
+            point.append([treeNode.id, dadDecisions[treeNode.id]])
+            for i in xrange(len(treeNode.children)):
+                dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, 1)
+        elif selectedParent == 2:
+            parentDecision = momDecisions[treeNode.id]
+            point.append([treeNode.id, momDecisions[treeNode.id]])
+            for i in xrange(len(treeNode.children)):
+                dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, 2)
+        elif selectedParent == 0:
+            if random.random() < 0.5:
+                selectedParent = 1
+                parentDecision = dadDecisions[treeNode.id]
+                point.append([treeNode.id, dadDecisions[treeNode.id]])
+                for i in xrange(len(treeNode.children)):
+                    dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, selectedParent)
+            else:
+                selectedParent = 2
+                parentDecision = momDecisions[treeNode.id]
+                point.append([treeNode.id, momDecisions[treeNode.id]])
+                for i in xrange(len(treeNode.children)):
+                    dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, selectedParent)
     elif parentDecision and treeNode.type == "Featured Group":
-        if treeNode.maxCardinality == 1 and treeNode.minCardinality == 1:
-            index = random.choice(xrange(len(treeNode.children)))
+        if selectedParent == 0:
+            if random.random < 0.5:
+                for i in xrange(len(treeNode.children)):
+                    parentDecision = dadDecisions[treeNode.children[i].id]
+                    point.append([treeNode.children[i].id, dadDecisions[treeNode.children[i].id]])
+                    dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, 1)
+            else:
+                for i in xrange(len(treeNode.children)):
+                    parentDecision = momDecisions[treeNode.children[i].id]
+                    point.append([treeNode.children[i].id, momDecisions[treeNode.children[i].id]])
+                    dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions,2)
+        else:
             for i in xrange(len(treeNode.children)):
-                if index == i:
-                    parentDecision = True
-                    point.append([treeNode.children[i].id, True])
-                    dfs(treeNode.children[i], point, parentDecision)
-                else:
-                    parentDecision = False
-                    point.append([treeNode.children[i].id, False])
-                    dfs(treeNode.children[i], point, parentDecision)
-        elif treeNode.minCardinality == 1 and treeNode.maxCardinality == -1:
-            choiceString = getOrRelationshipChoiceString(len(treeNode.children))
-            for i in xrange(len(treeNode.children)):
-                if choiceString[i] == '1':
-                    parentDecision = True
-                    point.append([treeNode.children[i].id, True])
-                    dfs(treeNode.children[i], point, parentDecision)
-                else:
-                    parentDecision = False
-                    point.append([treeNode.children[i].id, False])
-                    dfs(treeNode.children[i], point, parentDecision)
+                parentDecision = momDecisions[treeNode.children[i].id] if selectedParent == 2 else dadDecisions[treeNode.children[i].id]
+                point.append([treeNode.children[i].id, parentDecision])
+                dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, selectedParent)
     elif parentDecision and treeNode.type == "Group":
         for i in xrange(len(treeNode.children)):
-            dfs(treeNode.children[i], point, parentDecision)
+            dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, selectedParent)
     elif parentDecision and treeNode.type == "Root":
         point.append([treeNode.id, True])
         parentDecision = True
         for i in xrange(len(treeNode.children)):
-            dfs(treeNode.children[i], point, parentDecision)
+            dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, selectedParent)
     elif not parentDecision:
         if treeNode.type == "Mandatory" or treeNode.type == "Optional":
             point.append([treeNode.id, False])
@@ -231,14 +251,31 @@ def dfs(treeNode, point, parentDecision):
             for i in xrange(len(treeNode.children)):
                 point.append([treeNode.children[i].id, False])
         for i in xrange(len(treeNode.children)):
-            dfs(treeNode.children[i], point, parentDecision)
+            dfs_mate(treeNode.children[i], point, parentDecision, dadDecisions, momDecisions, selectedParent)
 
 
 
 def matePoints(model, ind1, ind2):
     """ Logic for mate/crossover goes here  """
-    ind1[len(ind1)-3] = 1
-    ind2[len(ind2) - 3] = 1
+    dadDecisions = {}
+    for index in range(len(ind1)):
+        dadDecisions[model.nodeOrder[index]] = (ind1[index]==1)
+    momDecisions = {}
+    for index in range(len(ind2)):
+        momDecisions[model.nodeOrder[index]] = (ind2[index]==1)
+    point1 = []
+    dfs_mate(model.root, point1, True, dadDecisions, momDecisions, 0)
+    point2 = []
+    dfs_mate(model.root, point2, True, dadDecisions, momDecisions, 0)
+    #print point1
+    #print point2
+    i1 = [1 if i[1] == True else 0 for i in point1]
+    i2 = [1 if i[1] == True else 0 for i in point2]
+    for index in range(len(i1)):
+        ind1[index] = i1[index]
+
+    for index in range(len(i2)):
+        ind2[index] = i2[index]
 
 
 def mutatePoints(model, ind1):
@@ -249,6 +286,7 @@ def mutatePoints(model, ind1):
     point = []
     dfs_mutate(model.root , point, True, nodeDecisions, False)
     ind = [1 if i[1] == True else 0 for i in point]
-    print str(ind1) + " ---> " + str(ind)
-    ind1[len(ind1) - 1] = 1
+    #print str(ind1) + " ---> " + str(ind)
+    for index in range(len(ind)):
+        ind1[index] = ind[index]
 
