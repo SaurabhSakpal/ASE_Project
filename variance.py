@@ -24,25 +24,25 @@ def main():
     violations = []
     num_features = []
 
-    #print "\n\nGENERATING " + str(n) + " POINTS"
-    points = simulator.generateNPoints(n)
-    print model.nodeOrder
-    for i,point in enumerate(points):
-        print '*******POINT '+str(i)+' ********'
-        point.evaluateObjectives()
-        print point.objectives
-        cost.append(point.objectives.cost)
-        violations.append(point.objectives.constraintsFailed)
-        num_features.append(point.objectives.featureRichness)
+    # print "\n\nGENERATING " + str(n) + " POINTS"
+    # points = simulator.generateNPoints(n)
+    # print model.nodeOrder
+    # for i,point in enumerate(points):
+    #     print '*******POINT '+str(i)+' ********'
+    #     point.evaluateObjectives()
+    #     print point.objectives
+    #     cost.append(point.objectives.cost)
+    #     violations.append(point.objectives.constraintsFailed)
+    #     num_features.append(point.objectives.featureRichness)
 
     runOptimiser(simulator, model)
 
-    print 'Mean cost', np.mean(cost)
-    print 'Var cost', np.var(cost)
-    print 'Mean violations', np.mean(violations)
-    print 'Var violations', np.var(violations)
-    print 'Mean num of features', np.mean(num_features)
-    print 'Var num of features', np.var(num_features)
+    # print 'Mean cost', np.mean(cost)
+    # print 'Var cost', np.var(cost)
+    # print 'Mean violations', np.mean(violations)
+    # print 'Var violations', np.var(violations)
+    # print 'Mean num of features', np.mean(num_features)
+    # print 'Var num of features', np.var(num_features)
     # plt.scatter(cost,num_features)
     # plt.show()
     # plt.scatter(violations,num_features)

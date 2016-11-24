@@ -10,6 +10,12 @@ def getIndividualPoint(simulator):
     #print ind
     return ind
 
+def getSATSolverGeneratedPoint(simulator):
+    startPopulation = simulator.startPopulation
+    individual = startPopulation[random.choice(xrange(len(startPopulation)))]
+    return individual
+
+
 def evaluateObjectives(model, ind1):
     cost = evaluateCost(ind1, model)
     featureRichness = evaluateFeatureRichness(ind1)

@@ -74,8 +74,77 @@ def nsga2(simulator, model):
     return pop
 
 
-def spea2():
+def spea2(simulator, model):
     """ SPEA2 implementation goes here """
+    simulator.setPopulationSize(100)
+    simulator.generateInitialPopulation()
+    creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0), crowding_dist=None)
+    creator.create("Individual", list, fitness=creator.FitnessMulti)
+    toolbox = base.Toolbox()
+    toolbox.register("splot_point", getSATSolverGeneratedPoint, simulator)
+    toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.splot_point)
+    toolbox.register("evaluate", evaluateObjectives, model)
+    toolbox.register("select", tools.selSPEA2)
+    toolbox.register("mate", matePoints, model)
+    toolbox.register("mutate", mutatePoints, model)
+    # binary tournament selection
+    toolbox.register("selectTournament", tools.selTournament, tournsize=2)
+    # ind1 = toolbox.individual()
+    # print ind1
+    # print ind1.fitness.valid
+    MU = 20
+    toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+    # pop = toolbox.population(n=MU)
+    # invalid_ind = [ind for ind in pop if not ind.fitness.valid]
+    # fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+    # for ind, fit in zip(invalid_ind, fitnesses):
+    #     ind.fitness.values = fit
+
+    # Step 1 Initialization
+    N = 80
+    Nbar = 40
+    GEN = 100
+    U = 0
+    V = 1
+    pop = toolbox.population(n=N)
+    archive = []
+    curr_gen = 1
+
+    while True:
+        # Step 2 Fitness assignement
+        for ind in pop:
+            ind.fitness.values = toolbox.evaluate(ind)
+
+        for ind in archive:
+            ind.fitness.values = toolbox.evaluate(ind)
+
+        # Step 3 Environmental selection
+        archive  = toolbox.select(pop + archive, k=Nbar)
+
+        # Step 4 Termination
+        if curr_gen >= GEN:
+            final_set = archive
+            break
+
+        # Step 5 Mating Selection
+        mating_pool = toolbox.selectTournament(archive, k=N)
+        offspring_pool = map(toolbox.clone, mating_pool)
+
+        # Step 6 Variation
+        # crossover 100% and mutation 6%
+        for child1, child2 in zip(offspring_pool[::2], offspring_pool[1::2]):
+            toolbox.mate(child1, child2)
+
+        for mutant in offspring_pool:
+            if random.random() < 0.06:
+                toolbox.mutate(mutant)
+
+        pop = offspring_pool
+
+        curr_gen += 1
+
+    printPopulation(pop)
+    return pop
 
 
 def pso():
@@ -83,8 +152,8 @@ def pso():
 
 
 def runOptimiser(simulator, model):
-   pop = nsga2(simulator, model)
-   cost = [t.fitness.values[0] for t in pop]
-   fr = [t.fitness.values[2] for t in pop]
-   plt.scatter(cost,fr)
-   plt.show()
+   pop = spea2(simulator, model)
+   # cost = [t.fitness.values[0] for t in pop]
+   # fr = [t.fitness.values[2] for t in pop]
+   # plt.scatter(cost,fr)
+   # plt.show()
