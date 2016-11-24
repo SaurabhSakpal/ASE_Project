@@ -1,5 +1,6 @@
 import random
 from Point import Point
+import pycosat
 
 class Simulator:
     def __init__(self, splotModel):
@@ -93,3 +94,28 @@ class Simulator:
             print "\n"
             n_point_list.append(Point(self.model, point))
         return n_point_list
+
+    def satSolveLeaves(self):
+        mandatoryNodes = []
+        print self.model.crossTreeConstraints
+        constraint_list = self.model.crossTreeConstraints
+        sat_vars = set([node.id for constraint in constraint_list for node in constraint.treeNodeList])
+        id2tag = {i+1: v for i,v in enumerate(list(sat_vars))} 
+        tag2id = {v: i+1 for i,v in enumerate(list(sat_vars))} 
+        
+        sat_input = []
+        for constraint in constraint_list:
+            clause_encoding = []
+            for clause in constraint.clauses:
+                node_tag = clause[1:] if clause[0]=='~' else clause
+                mult = - 1 if clause[0]=='~' else 1
+                clause_encoding.append(mult*tag2id[node_tag])
+            sat_input.append(clause_encoding)
+        print id2tag
+        print sat_input
+        count = 0
+        for sol in pycosat.itersolve(sat_input):
+            print sol
+            count +=1
+        print 'count =', count
+        return mandatoryNodes

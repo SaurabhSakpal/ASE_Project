@@ -24,11 +24,14 @@ def main():
     num_features = []
 
     print "\n\nGENERATING " + str(n) + " POINTS"
+    count = 0
     points = simulator.generateNPoints(n)
     for i,point in enumerate(points):
         # print '*******POINT '+str(i)+' ********'
         point.evaluateObjectives()
         #print point.objectives
+        if point.objectives.constraintsFailed == 0:
+            count += 1
         cost.append(point.objectives.cost)
         violations.append(point.objectives.constraintsFailed)
         num_features.append(point.objectives.featureRichness)
@@ -39,6 +42,7 @@ def main():
     print 'Var violations', np.var(violations)
     print 'Mean num of features', np.mean(num_features)
     print 'Var num of features', np.var(num_features)
+    print 'count =', count
     # plt.scatter(cost,num_features)
     # plt.show()
     # plt.scatter(violations,num_features)
