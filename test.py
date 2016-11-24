@@ -9,4 +9,4 @@ model.printTree(model.root, 0)
 
 simulator = Simulator(model)
 print 'yeah'
-simulator.satSolveLeaves()
+simulator.cnfSatisfiedTree()
