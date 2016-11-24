@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bf0c39a3-e917-4558-acdd-64a3879b930b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GAMethods.py" afterPath="$PROJECT_DIR$/GAMethods.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Optimisers.py" afterPath="$PROJECT_DIR$/Optimisers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Simulator.py" afterPath="$PROJECT_DIR$/Simulator.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/variance.py" afterPath="$PROJECT_DIR$/variance.py" />
     </list>
     <ignored path="SplotParser.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -45,8 +42,8 @@
       <file leaf-file-name="Optimisers.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Optimisers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="773">
-              <caret line="154" column="32" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
+            <state relative-caret-position="623">
+              <caret line="209" column="16" selection-start-line="209" selection-start-column="16" selection-end-line="209" selection-end-column="16" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -916,8 +913,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Optimisers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="773">
-          <caret line="154" column="32" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
+        <state relative-caret-position="623">
+          <caret line="209" column="16" selection-start-line="209" selection-start-column="16" selection-end-line="209" selection-end-column="16" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
