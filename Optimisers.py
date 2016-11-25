@@ -6,7 +6,7 @@ import random
 import matplotlib.pyplot as plt
 
 def nsga2(simulator, model):
-    creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0), crowding_dist=None)
+    creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0, -1.0, 1.0), crowding_dist=None)
     creator.create("Individual", list, fitness=creator.FitnessMulti)
     toolbox = base.Toolbox()
     toolbox.register("splot_point", getIndividualPoint, simulator)
@@ -78,7 +78,7 @@ def spea2(simulator, model):
     """ SPEA2 implementation goes here """
     simulator.setPopulationSize(100)
     simulator.generateInitialPopulation()
-    creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0), crowding_dist=None)
+    creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0, -1.0, 1.0), crowding_dist=None)
     creator.create("Individual", list, fitness=creator.FitnessMulti)
     toolbox = base.Toolbox()
     toolbox.register("splot_point", getSATSolverGeneratedPoint, simulator)
@@ -151,7 +151,7 @@ def ga(simulator, model):
     """ PSO implementation goes here """
     simulator.setPopulationSize(100)
     simulator.generateInitialPopulation()
-    creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0), crowding_dist=None)
+    creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0, -1.0, 1.0), crowding_dist=None)
     creator.create("Individual", list, fitness=creator.FitnessMulti)
     toolbox = base.Toolbox()
     toolbox.register("splot_point", getSATSolverGeneratedPoint, simulator)

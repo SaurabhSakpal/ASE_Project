@@ -20,7 +20,9 @@ def evaluateObjectives(model, ind1):
     cost = evaluateCost(ind1, model)
     featureRichness = evaluateFeatureRichness(ind1)
     constraintsFailed = evaluateConstraintsFailed(ind1, model)
-    return (cost, constraintsFailed,featureRichness)
+    defects = evaluateDefects(ind1, model)
+    benefits = evaluateBenefits(ind1, model)
+    return (cost, constraintsFailed,featureRichness, defects, benefits)
 
 
 def evaluateCost(ind1, model):
@@ -28,6 +30,18 @@ def evaluateCost(ind1, model):
     # value = [[id1,True],[id2,True],[id3,False]...]
     # print 'find cost'
     return sum([model.treeNodeMap[model.nodeOrder[i]].cost if ind1[i] == 1 else 0 for i in range(len(ind1))])
+
+def evaluateBenefits(ind1, model):
+    """ Code for calculating cost of the given point goes here """
+    # value = [[id1,True],[id2,True],[id3,False]...]
+    # print 'find cost'
+    return sum([model.treeNodeMap[model.nodeOrder[i]].benefits if ind1[i] == 1 else 0 for i in range(len(ind1))])
+
+def evaluateDefects(ind1, model):
+    """ Code for calculating cost of the given point goes here """
+    # value = [[id1,True],[id2,True],[id3,False]...]
+    # print 'find cost'
+    return sum([model.treeNodeMap[model.nodeOrder[i]].defects if ind1[i] == 1 else 0 for i in range(len(ind1))])
 
 
 def evaluateConstraintsFailed(ind1, model):
