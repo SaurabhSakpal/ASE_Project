@@ -14,17 +14,17 @@
 </meta>
 <feature_tree>
 :r Mobile Phone(_r) $100$
-	:m Calls(_r_1) $15$
-	:o GPS(_r_2) $15$
+	:m Calls(_r_1) $15$ #18# %56%
+	:o GPS(_r_2) $15$ #54# %63%
 	:m Screen(_r_3)
 		:g (_r_3_5) [1,1] 
-			: Basic(_r_3_5_6) $5$
-			: Colour(_r_3_5_7) $15$
-			: HighResolution(_r_3_5_8) $50$
+			: Basic(_r_3_5_6) $5$ #4# %70%
+			: Colour(_r_3_5_7) $15$ #20# %46%
+			: HighResolution(_r_3_5_8) $50$ #30# %57%
 	:o Media(_r_4)
 		:g (_r_4_9) [1,*] 
-			: Camera(_r_4_9_10) $60$
-			: MP3(_r_4_9_11) $30$
+			: Camera(_r_4_9_10) $60$ #32# %95%
+			: MP3(_r_4_9_11) $30$ #12# %38%
 </feature_tree>
 <constraints>
 constraint_1:~_r_2 or ~_r_3_5_6

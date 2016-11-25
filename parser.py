@@ -63,6 +63,22 @@ class SPLOTParser:
         else:
             raise Exception('Exception : Invalid Node Structure')
 
+    def getCostValue(self, line):
+        cost_match = re.search('\$\d*\$', line)
+        cost = float(cost_match.group()[1:-1]) if cost_match else 0.0
+        return cost
+
+    def getDefectsValue(self, line):
+        defect_match = re.search('#\d+#', line)
+        defects = int(defect_match.group()[1:-1]) if defect_match else 0
+        return defects
+
+    def getBenefits(self, line):
+        benefits_match = re.search('%\d+%', line)
+        benefits = int(benefits_match.group()[1:-1]) if benefits_match else 0
+        return benefits
+
+
     def parseTree(self, structure, splotModel):
         lines = structure.split("\n")
         rootNode = ""
@@ -78,13 +94,13 @@ class SPLOTParser:
                     name = self.getNodeName(line)
                     if len(name) == 0:
                         name = id
-                    #print id, id.count("_")
                     if nodeType == "Featured Group":
                         self.findCardinality(line)
 
-                    cost_match = re.search('\$\d*\$', line)
-                    cost = float(cost_match.group()[1:-1]) if cost_match else 0.0
-                    treeNode = TreeNode(id, name, nodeType, cost) if nodeType != "Featured Group" else FeaturedGroupTreeNode(id, name, nodeType, *self.findCardinality(line))
+                    cost = self.getCostValue(line)
+                    defects = self.getDefectsValue(line)
+                    benefits = self.getBenefits(line)
+                    treeNode = TreeNode(id, name, nodeType, cost, defects, benefits) if nodeType != "Featured Group" else FeaturedGroupTreeNode(id, name, nodeType, *self.findCardinality(line))
                     
                     if count == 0:
                         previousId = id.count("_")
