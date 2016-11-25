@@ -7,5 +7,7 @@ modelFile = sys.argv[1]
 model = SPLOTParser().parse(modelFile)
 #model.printTree(model.root, 0)
 model.generateTreeStructureConstraints(model.root)
+model.printTreeConstraints()
 simulator = Simulator(model)
+simulator.setPopulationSize(1)
 print len(simulator.satSolveLeaves())

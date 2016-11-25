@@ -131,4 +131,120 @@ class Simulator:
         for index in xrange(len(validPopulation)):
             ind = [1 if i > 0 else 0 for i in validPopulation[index]]
             population.append(ind)
+        print population
         return population
+
+    def satSolveCrossTreeConstraints(self):
+        mandatoryNodes = []
+        print self.model.crossTreeConstraints
+        constraint_list = self.model.crossTreeConstraints
+        sat_vars = set([node.id for constraint in constraint_list for node in constraint.treeNodeList])
+        id2tag = {i + 1: v for i, v in enumerate(list(sat_vars))}
+        tag2id = {v: i + 1 for i, v in enumerate(list(sat_vars))}
+
+        sat_input = []
+        for constraint in constraint_list:
+            clause_encoding = []
+            for clause in constraint.clauses:
+                node_tag = clause[1:] if clause[0] == '~' else clause
+                mult = - 1 if clause[0] == '~' else 1
+                clause_encoding.append(mult * tag2id[node_tag])
+            sat_input.append(clause_encoding)
+        print id2tag
+        #print sat_input
+        count = 0
+        for sol in pycosat.itersolve(sat_input):
+            mandatoryNodes.append(sol)
+            if count == (self.population_limit * 10):
+                break
+            count += 1
+        print 'count =', count
+        allPartialSolutions = []
+        for partialSolution in mandatoryNodes:
+            solnMap = {}
+            for i in partialSolution:
+                if i > 0:
+                    solnMap[id2tag[i]] = True
+                else:
+                    solnMap[id2tag[i*-1]] = False
+            allPartialSolutions.append(solnMap)
+        #print allPartialSolutions
+        return allPartialSolutions
+
+    def dfsPartial(self, treeNode, point, parentDecision, partialSolutionMap):
+        if parentDecision and treeNode.type == "Mandatory":
+            point.append([treeNode.id, True])
+            parentDecision = True
+            for i in xrange(len(treeNode.children)):
+                self.dfsPartial(treeNode.children[i], point, parentDecision)
+        elif parentDecision and treeNode.type == "Optional":
+            if random.random() < 0.5:
+                parentDecision =  True
+                point.append([treeNode.id, True])
+            else:
+                parentDecision = False
+                point.append([treeNode.id, False])
+            for i in xrange(len(treeNode.children)):
+                self.dfsPartial(treeNode.children[i], point, parentDecision)
+        elif parentDecision and treeNode.type == "Featured Group":
+            if treeNode.maxCardinality == 1 and treeNode.minCardinality == 1:
+                index = random.choice(xrange(len(treeNode.children)))
+                for i in xrange(len(treeNode.children)):
+                    if index == i:
+                        parentDecision =  True
+                        point.append([treeNode.children[i].id, True])
+                        self.dfsPartial(treeNode.children[i], point, parentDecision)
+                    else:
+                        parentDecision = False
+                        point.append([treeNode.children[i].id, False])
+                        self.dfsPartial(treeNode.children[i], point, parentDecision)
+            elif treeNode.minCardinality == 1 and treeNode.maxCardinality == -1:
+                choiceString = self.getOrRelationshipChoiceString(len(treeNode.children))
+                for i in xrange(len(treeNode.children)):
+                    if choiceString[i] == '1':
+                        parentDecision = True
+                        point.append([treeNode.children[i].id, True])
+                        self.dfsPartial(treeNode.children[i], point, parentDecision)
+                    else:
+                        parentDecision = False
+                        point.append([treeNode.children[i].id, False])
+                        self.dfsPartial(treeNode.children[i], point, parentDecision)
+        elif parentDecision and treeNode.type == "Group":
+            for i in xrange(len(treeNode.children)):
+                self.dfsPartial(treeNode.children[i], point, parentDecision)
+        elif parentDecision and treeNode.type == "Root":
+            point.append([treeNode.id, True])
+            parentDecision = True
+            for i in xrange(len(treeNode.children)):
+                self.dfsPartial(treeNode.children[i], point, parentDecision)
+        elif not parentDecision:
+            if treeNode.type == "Mandatory" or treeNode.type == "Optional":
+                point.append([treeNode.id, False])
+            elif treeNode.type == "Featured Group":
+                for i in xrange(len(treeNode.children)):
+                    point.append([treeNode.children[i].id, False])
+            for i in xrange(len(treeNode.children)):
+                self.dfsPartial(treeNode.children[i], point, parentDecision)
+
+    def solveTree(self):
+        partialSolutions = self.satSolveCrossTreeConstraints()
+        for soln in partialSolutions:
+            #print "\n\n\n"
+            print len(soln)
+            #print "\n"
+            for key in list(soln):
+                temp = self.model.treeNodeMap[key]
+                if soln[key]:
+                    while temp.parentNode != None:
+                        temp = temp.parentNode
+                        if temp.type != "Featured Group":
+                            soln[temp.id] = True
+                        else:
+                            temp = temp.parentNode
+            #print soln
+            #print sorted(soln.items())
+        for i in partialSolutions:
+            point = []
+            print len(i)
+            #self.dfsPartial(self.model.root, point, True, i)
+        return []
