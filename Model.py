@@ -8,6 +8,25 @@ class SplotModel:
         self.treeConstraints = []
         self.nodeOrder = []
         self.featureFailureCount = {}
+        self.maxCost = 0
+        self.maxDefect = 0
+        self.maxBenefits = 0
+
+    def findMaxObjectives(self):
+        maxCost = -1
+        maxBenefits = -1
+        maxDefects = -1
+        for i in self.treeNodeMap:
+            maxCost += self.treeNodeMap[i].cost
+            maxBenefits += self.treeNodeMap[i].benefits
+            maxDefects += self.treeNodeMap[i].defects
+        self.maxCost = maxCost
+        self.maxDefect = maxDefects
+        self.maxBenefits = maxBenefits
+
+        print maxCost, maxBenefits, maxDefects
+
+
 
     def addTreeNodeToMap(self, treeNode):
         self.treeNodeMap[treeNode.id] = treeNode
@@ -21,6 +40,7 @@ class SplotModel:
     def updateRootNode(self, rootNode):
         self.root = rootNode
         self.populateNodeOrder(self.root)
+        self.findMaxObjectives()
 
     def printTree(self, treeNode, tabCount):
         tabs = "\t" * tabCount
