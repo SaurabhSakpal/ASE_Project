@@ -12,7 +12,7 @@ def nsga2(simulator, model):
     toolbox.register("splot_point", getIndividualPoint, simulator)
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.splot_point)
     toolbox.register("evaluate", evaluateObjectives, model)
-    toolbox.register("select", tools.selNSGA2Cdom)
+    toolbox.register("select", tools.selNSGA2)
     toolbox.register("mate", matePoints, model)
     toolbox.register("mutate", mutatePoints, model)
     # ind1 = toolbox.individual()
@@ -38,7 +38,7 @@ def nsga2(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 10
+    NGEN = 100
 
     for gen in range(1, NGEN):
         # Vary the population
@@ -166,7 +166,7 @@ def ga(simulator, model):
     # print ind1
     # print ind1.fitness.valid
     MU = 100
-    CXPB, MUTPB, NGEN = 0.5, 0.2, 10
+    CXPB, MUTPB, NGEN = 0.5, 0.2, 100
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
