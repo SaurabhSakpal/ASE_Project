@@ -18,7 +18,7 @@ def nsga2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 1000
+    MU = 100
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     # print "\n\n\n ## \n"
@@ -38,7 +38,7 @@ def nsga2(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 100 
+    NGEN = 10 
 
     for gen in range(1, NGEN):
         # Vary the population
@@ -92,7 +92,7 @@ def spea2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 1000
+    MU = 100
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     # pop = toolbox.population(n=MU)
     # invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -103,7 +103,7 @@ def spea2(simulator, model):
     # Step 1 Initialization
     N = 80
     Nbar = 40
-    GEN = 100
+    GEN = 10
     U = 0
     V = 1
     pop = toolbox.population(n=N)
@@ -165,8 +165,8 @@ def ga(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 1000
-    CXPB, MUTPB, NGEN = 0.5, 0.2, 100
+    MU = 100
+    CXPB, MUTPB, NGEN = 0.5, 0.2, 10
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
