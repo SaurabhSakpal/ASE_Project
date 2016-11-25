@@ -17,7 +17,7 @@ def writeToFile(paretos, folder, pareto_name):
             print(fit_array_norm[i,:])
             print(' '.join(map(str, fit_array_norm[i,:].tolist())), file=f)
         plt.scatter(fit_array_norm[:,0],fit_array_norm[:,2], color=colors[c])
-    plt.savefig('./graph/pareto.png')
+    plt.savefig('./graphs/pareto.png')
 
 def writeTruePareto(paretos, folder, file):
     reference_set = []
