@@ -24,6 +24,7 @@ from collections import Sequence
 from copy import deepcopy
 from functools import partial
 from operator import mul, truediv
+import math
 
 
 class Toolbox(object):
@@ -216,6 +217,29 @@ class Fitness(object):
             elif self_wvalue < other_wvalue:
                 return False
         return not_equal
+
+    def dominatesCdom(self, other, obj=slice(None)):
+        """Returns whether or not *wvalues1* dominates *wvalues2*.
+        
+        :param wvalues1: The weighted fitness values that would be dominated.
+        :param wvalues2: The weighted fitness values of the dominant.
+        :returns: :obj:`True` if wvalues2 dominates wvalues1, :obj:`False`
+                  otherwise. Dominates = Continuous Dominates
+        """
+        def expLoss(x1, y1, n):
+           return -1*math.e**( (x1 - y1) / n )
+
+        def loss(x, y):
+            losses = []
+            n = len(x)
+            for self_wvalue, other_wvalue in zip(x, y):
+                losses += [expLoss( self_wvalue, other_wvalue, n)]
+            return sum(losses) / n
+
+        l1 = loss(self.wvalues[obj], other.wvalues[obj])
+        l2 = loss(other.wvalues[obj], self.wvalues[obj])
+        
+        return l1 < l2
 
     @property
     def valid(self):

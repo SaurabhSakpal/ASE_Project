@@ -12,7 +12,7 @@ def nsga2(simulator, model):
     toolbox.register("splot_point", getIndividualPoint, simulator)
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.splot_point)
     toolbox.register("evaluate", evaluateObjectives, model)
-    toolbox.register("select", tools.selNSGA2)
+    toolbox.register("select", tools.selNSGA2Cdom)
     toolbox.register("mate", matePoints, model)
     toolbox.register("mutate", mutatePoints, model)
     # ind1 = toolbox.individual()
