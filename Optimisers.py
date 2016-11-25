@@ -18,7 +18,7 @@ def nsga2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 20
+    MU = 1000
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     # print "\n\n\n ## \n"
@@ -38,7 +38,7 @@ def nsga2(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 100
+    NGEN = 100 
 
     for gen in range(1, NGEN):
         # Vary the population
@@ -92,7 +92,7 @@ def spea2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 20
+    MU = 1000
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     # pop = toolbox.population(n=MU)
     # invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -165,7 +165,7 @@ def ga(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 20
+    MU = 1000
     CXPB, MUTPB, NGEN = 0.5, 0.2, 100
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
@@ -207,7 +207,7 @@ def ga(simulator, model):
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
 
-        print("  Evaluated %i individuals" % len(invalid_ind))
+        #print("  Evaluated %i individuals" % len(invalid_ind))
 
         # The population is entirely replaced by the offspring
         pop[:] = offspring
@@ -216,12 +216,12 @@ def ga(simulator, model):
         fits = [ind.fitness.values[0] for ind in pop]
 
     printPopulation(pop)
+    return pop
 
 
-
-def runOptimiser(simulator, model):
-   pop = ga(simulator, model)
-   # cost = [t.fitness.values[0] for t in pop]
-   # fr = [t.fitness.values[2] for t in pop]
-   # plt.scatter(cost,fr)
-   # plt.show()
+def runOptimiser(simulator, model, algo):
+   pop = algo(simulator, model)
+   return [t.fitness.values for t in pop]
+   #cost_nsga2 = [t.fitness.values[0] for t in pop_nsga2]
+   #fr_nsga2 = [t.fitness.values[2] for t in pop_nsga2]
+   #plt.show()

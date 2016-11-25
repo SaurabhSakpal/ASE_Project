@@ -5,14 +5,14 @@ import pycosat
 class Simulator:
     def __init__(self, splotModel):
         self.model = splotModel
-        self.population_limit  = 100
+        self.population_limit  = 1000
         self.startPopulation = []
 
     def setPopulationSize(self, size):
         self.population_limit = size
 
     def generateInitialPopulation(self):
-        self.startPopulation = self.satSolveLeaves()
+        self.startPopulation = self.generateCNFSatPopulation()
 
     def getOrRelationshipChoiceString(self, numberOfChild):
         binaryString = ""
@@ -103,13 +103,12 @@ class Simulator:
             n_point_list.append(Point(self.model, point))
         return n_point_list
 
-    def satSolveLeaves(self):
+    def generateCNFSatPopulation(self):
         constraint_list = self.model.crossTreeConstraints
         tree_constraint_list = self.model.treeConstraints
         constraint_list.extend(tree_constraint_list)
-
-        id2tag = {i + 1: v for i, v in enumerate(list(self.model.nodeOrder))}
-        tag2id = {v: i + 1 for i, v in enumerate(list(self.model.nodeOrder))}
+        #id2tag = {i + 1: v for i, v in enumerate(list(self.model.nodeOrder))}
+        tag2id = {v: i+1 for i, v in enumerate(list(self.model.nodeOrder))}
         sat_input = []
         for constraint in constraint_list:
             clause_encoding = []
@@ -119,6 +118,7 @@ class Simulator:
                 clause_encoding.append(mult * tag2id[node_tag])
             sat_input.append(clause_encoding)
         #print sat_input
+        sat_input.append([tag2id['_r']])
         validPopulation = []
         count = 0
         for sol in pycosat.itersolve(sat_input, len(self.model.nodeOrder)):
@@ -126,6 +126,8 @@ class Simulator:
             count += 1
             if count == (self.population_limit * 10):
                 break
+        if count == 0:
+            raise Exception('Can not solve for constraints')
         #print 'count =', count
         population = []
         for index in xrange(len(validPopulation)):
