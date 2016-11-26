@@ -48,6 +48,7 @@ def selNSGA2Cdom(individuals, k, nd='standard'):
         
     return chosen
 
+
 def sortNondominated(individuals, k, first_front_only=False):
     """Sort the first *k* *individuals* into different nondomination levels 
     using the "Fast Nondominated Sorting Approach" proposed by Deb et al.,
@@ -78,16 +79,43 @@ def sortNondominated(individuals, k, first_front_only=False):
     next_front = []
     dominating_fits = defaultdict(int)
     dominated_fits = defaultdict(list)
-    
+    dominatedby_fits = defaultdict(list)
+
+    maxValues = []
+    for i, fit_i in enumerate(fits):
+        if i == 0:
+            maxValues = list(fit_i.values)
+        else:
+            for i in range(len(fit_i.values)):
+                if maxValues[i] < fit_i.values[i]:
+                    maxValues[i] = fit_i.values[i]
+
+    # print maxValues
+
+    for i, fit_i in enumerate(fits):
+        normalised_value = []
+        for j in range(len(fit_i.values)):
+            if maxValues[j] != 0:
+                normalised_value.append(fit_i.wvalues[j] / maxValues[j])
+            else:
+                normalised_value.append(fit_i.wvalues[j])
+        fit_i.normalisedValue = normalised_value
+        #print normalised_value
+
     # Rank first Pareto front
     for i, fit_i in enumerate(fits):
         for fit_j in fits[i+1:]:
+            # print str(i) + " : "+str(fits.index(fit_j))
+            # print "\t "+ str(fit_i) + " : "+ str(fit_j)
+            # print fit_j.normalisedValue
             if fit_i.dominatesCdom(fit_j):
                 dominating_fits[fit_j] += 1
                 dominated_fits[fit_i].append(fit_j)
+                dominatedby_fits[fit_j].append(fit_i)
             elif fit_j.dominatesCdom(fit_i):
                 dominating_fits[fit_i] += 1
                 dominated_fits[fit_j].append(fit_i)
+                dominatedby_fits[fit_i].append(fit_j)
         if dominating_fits[fit_i] == 0:
             current_front.append(fit_i)
     
@@ -96,6 +124,14 @@ def sortNondominated(individuals, k, first_front_only=False):
         fronts[-1].extend(map_fit_ind[fit])
     pareto_sorted = len(fronts[-1])
 
+    # for i, fit_i in enumerate(fits):
+    #     dominatedStr = ""
+    #     for fit_d in dominatedby_fits[fit_i]:
+    #         dominatedStr  = dominatedStr + " "+ str(fits.index(fit_d))
+    #     print str(i) + "("+str(dominating_fits[fit_i])+")(" + str(len(dominated_fits[fit_i])) + ") : " + dominatedStr
+
+    # print "Current Fronts Size: " + str(len(current_front)) + " pareto_shared : " + str(pareto_sorted)
+
     # Rank the next front until all individuals are sorted or 
     # the given number of individual are sorted.
     if not first_front_only:
@@ -103,8 +139,10 @@ def sortNondominated(individuals, k, first_front_only=False):
         while pareto_sorted < N:
             fronts.append([])
             for fit_p in current_front:
+                templist =  dominated_fits[fit_p]
                 for fit_d in dominated_fits[fit_p]:
                     dominating_fits[fit_d] -= 1
+                    temp = dominating_fits[fit_d]
                     if dominating_fits[fit_d] == 0:
                         next_front.append(fit_d)
                         pareto_sorted += len(map_fit_ind[fit_d])

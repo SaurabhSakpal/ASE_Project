@@ -12,7 +12,7 @@ def nsga2(simulator, model):
     toolbox.register("splot_point", getIndividualPoint, simulator)
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.splot_point)
     toolbox.register("evaluate", evaluateObjectives, model)
-    toolbox.register("select", tools.selNSGA2)
+    toolbox.register("select", tools.selNSGA2Cdom)
     toolbox.register("mate", matePoints, model)
     toolbox.register("mutate", mutatePoints, model)
     # ind1 = toolbox.individual()
@@ -31,7 +31,8 @@ def nsga2(simulator, model):
     for ind, fit in zip(invalid_ind, fitnesses):
         ind.fitness.values = fit
 
-    printPopulation(pop)
+    # printPopulation(pop)
+
     # print pop[0].fitness.valid
     # This is just to assign the crowding distance to the individuals
     # no actual selection is done
@@ -68,8 +69,8 @@ def nsga2(simulator, model):
 
     #print("Final population hypervolume is %f" % tools. hypervolume(pop, [11.0, 11.0]))
 
-    print "\n \n \nFinal Population: \n\n"
-    printPopulation(pop)
+    # print "\n \n \nFinal Population: \n\n"
+    # printPopulation(pop)
 
     return pop
 
@@ -92,7 +93,7 @@ def spea2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 100
+    MU = 12
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     # pop = toolbox.population(n=MU)
     # invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -165,8 +166,8 @@ def ga(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 100
-    CXPB, MUTPB, NGEN = 0.5, 0.2, 100
+    MU = 12
+    CXPB, MUTPB, NGEN = 0.5, 0.2, 1
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -215,7 +216,7 @@ def ga(simulator, model):
         # Gather all the fitnesses in one list and print the stats
         fits = [ind.fitness.values[0] for ind in pop]
 
-    printPopulation(pop)
+    #printPopulation(pop)
     return pop
 
 

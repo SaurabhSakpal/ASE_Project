@@ -22,7 +22,7 @@ def evaluateObjectives(model, ind1):
     constraintsFailed = evaluateConstraintsFailed(ind1, model)
     defects = evaluateDefects(ind1, model)
     benefits = evaluateBenefits(ind1, model)
-    return (cost, constraintsFailed,featureRichness, defects, benefits)
+    return (cost, constraintsFailed, featureRichness, defects, benefits)
 
 
 def evaluateCost(ind1, model):

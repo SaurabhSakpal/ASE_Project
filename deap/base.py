@@ -178,6 +178,8 @@ class Fitness(object):
         if len(values) > 0:
             self.values = values
 
+        self.normalisedValue = []
+
     def getValues(self):
         return tuple(map(truediv, self.wvalues, self.weights))
 
@@ -227,7 +229,7 @@ class Fitness(object):
                   otherwise. Dominates = Continuous Dominates
         """
         def expLoss(x1, y1, n):
-           return -1*math.e**( (x1 - y1) / n )
+            return -1*math.e**( (x1 - y1) / n )
 
         def loss(x, y):
             losses = []
@@ -236,9 +238,9 @@ class Fitness(object):
                 losses += [expLoss( self_wvalue, other_wvalue, n)]
             return sum(losses) / n
 
-        l1 = loss(self.wvalues[obj], other.wvalues[obj])
-        l2 = loss(other.wvalues[obj], self.wvalues[obj])
-        
+        l1 = loss(self.normalisedValue[obj], other.normalisedValue[obj])
+        l2 = loss(other.normalisedValue[obj], self.normalisedValue[obj])
+        # print "\t" + str(l1) +" : " + str(l2)
         return l1 < l2
 
     @property

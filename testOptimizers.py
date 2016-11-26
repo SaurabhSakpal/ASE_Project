@@ -47,7 +47,7 @@ def main():
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
-    algos = [nsga2, ga]
+    algos = [nsga2]#, ga]
     simulator = Simulator(model)
     n = 1000
     cost = []

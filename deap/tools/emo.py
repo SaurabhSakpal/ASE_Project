@@ -90,11 +90,14 @@ def sortNondominated(individuals, k, first_front_only=False):
                 dominated_fits[fit_j].append(fit_i)
         if dominating_fits[fit_i] == 0:
             current_front.append(fit_i)
-    
+
+
     fronts = [[]]
     for fit in current_front:
         fronts[-1].extend(map_fit_ind[fit])
     pareto_sorted = len(fronts[-1])
+
+    print "Current Fronts Size: " + str(len(current_front)) + " pareto_shared : " + str(pareto_sorted)
 
     # Rank the next front until all individuals are sorted or 
     # the given number of individual are sorted.
