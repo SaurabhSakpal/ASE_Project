@@ -135,14 +135,16 @@ def sortNondominated(individuals, k, first_front_only=False):
 
     # print "Current Fronts Size: " + str(len(current_front)) + " pareto_shared : " + str(pareto_sorted)
     sorted_points = defaultdict(list)
-    for key, value in sorted(dominatedCount_fits.iteritems(), reverse=True):
+    test = []
+    for key, value in sorted(dominatedCount_fits.iteritems()):
         sorted_points[value].append(key)
+        #test.append(value)
 
     if not first_front_only:
         N = min(len(individuals), k)
         while pareto_sorted < N:
             fronts.append([])
-            for count in sorted_points:
+            for count in sorted(sorted_points, reverse=True):
                 for fit_p in sorted_points[count]:
                     fronts[-1].extend(map_fit_ind[fit_p])
                     pareto_sorted += 1

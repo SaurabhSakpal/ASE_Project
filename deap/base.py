@@ -234,6 +234,8 @@ class Fitness(object):
         def loss(x, y):
             losses = []
             n = len(x)
+            if n == 0:
+                print "Len = 0"
             for self_wvalue, other_wvalue in zip(x, y):
                 losses += [expLoss( self_wvalue, other_wvalue, n)]
             if n != 0:
