@@ -10,14 +10,22 @@ import utils
 
 def writeToFile(paretos, folder, pareto_name):
     colors = ['r','b']
-    for c,algo in enumerate(paretos):
+    cc = 0
+    for algo in paretos:
         fit_array = np.array(paretos[algo], dtype=float)
-        fit_array_norm = fit_array/ fit_array.max(axis=0)
+        print('fit array shape',fit_array.shape)
+        num_obj = fit_array.shape[1]
+        fit_array_norm = np.vstack(tuple([fit_array[:,c]/max(1,np.max(fit_array[:,c])) for c in range(num_obj)]))
+        #fit_array_norm = fit_array/ fit_array.max(axis=0)
+        fit_array_norm = fit_array_norm.T
+        print('norm shape',fit_array_norm.shape)
+        print(fit_array_norm)
         f = open(folder+algo+'_'+pareto_name+'.txt','w')
         for i in range(fit_array_norm.shape[0]):
-            print(fit_array_norm[i,:])
             print(' '.join(map(str, fit_array_norm[i,:].tolist())), file=f)
-        plt.scatter(fit_array_norm[:,0],fit_array_norm[:,2], color=colors[c])
+        
+        plt.scatter(fit_array_norm[:,0],fit_array_norm[:,2], color=colors[cc])
+        cc += 1
     plt.savefig('./graphs/pareto.png')
 
 def writeTruePareto(paretos, dom, folder, file):
@@ -47,7 +55,7 @@ def main():
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
-    algos = [nsga2]#, ga]
+    algos = [nsga2, ga]
     simulator = Simulator(model)
     n = 1000
     cost = []
