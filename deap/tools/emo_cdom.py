@@ -80,6 +80,7 @@ def sortNondominated(individuals, k, first_front_only=False):
     dominating_fits = defaultdict(int)
     dominated_fits = defaultdict(list)
     dominatedby_fits = defaultdict(list)
+    dominatedCount_fits = defaultdict(list)
 
     maxValues = []
     for i, fit_i in enumerate(fits):
@@ -112,13 +113,15 @@ def sortNondominated(individuals, k, first_front_only=False):
                 dominating_fits[fit_j] += 1
                 dominated_fits[fit_i].append(fit_j)
                 dominatedby_fits[fit_j].append(fit_i)
+                dominatedCount_fits[fit_i] += 1
             elif fit_j.dominatesCdom(fit_i):
                 dominating_fits[fit_i] += 1
                 dominated_fits[fit_j].append(fit_i)
                 dominatedby_fits[fit_i].append(fit_j)
+                dominatedCount_fits[fit_j] += 1
         if dominating_fits[fit_i] == 0:
             current_front.append(fit_i)
-    
+
     fronts = [[]]
     for fit in current_front:
         fronts[-1].extend(map_fit_ind[fit])
@@ -131,8 +134,21 @@ def sortNondominated(individuals, k, first_front_only=False):
     #     print str(i) + "("+str(dominating_fits[fit_i])+")(" + str(len(dominated_fits[fit_i])) + ") : " + dominatedStr
 
     # print "Current Fronts Size: " + str(len(current_front)) + " pareto_shared : " + str(pareto_sorted)
+    sorted_points = defaultdict(list)
+    for key, value in sorted(dominatedCount_fits.iteritems(), reverse=True):
+        sorted_points[value].append(key)
 
-    # Rank the next front until all individuals are sorted or 
+    if not first_front_only:
+        N = min(len(individuals), k)
+        while pareto_sorted < N:
+            fronts.append([])
+            for count in sorted_points:
+                for fit_p in sorted_points[count]:
+                    fronts[-1].extend(map_fit_ind[fit_p])
+                    pareto_sorted += 1
+
+    """"
+    # Rank the next front until all individuals are sorted or
     # the given number of individual are sorted.
     if not first_front_only:
         N = min(len(individuals), k)
@@ -149,6 +165,7 @@ def sortNondominated(individuals, k, first_front_only=False):
                         fronts[-1].extend(map_fit_ind[fit_d])
             current_front = next_front
             next_front = []
+    """
     
     return fronts
 
