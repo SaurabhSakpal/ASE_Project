@@ -236,7 +236,10 @@ class Fitness(object):
             n = len(x)
             for self_wvalue, other_wvalue in zip(x, y):
                 losses += [expLoss( self_wvalue, other_wvalue, n)]
-            return sum(losses) / n
+            if n != 0:
+                return sum(losses) / n
+            else:
+                return 0
 
         l1 = loss(self.normalisedValue[obj], other.normalisedValue[obj])
         l2 = loss(other.normalisedValue[obj], self.normalisedValue[obj])
