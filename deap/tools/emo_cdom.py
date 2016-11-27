@@ -80,7 +80,7 @@ def sortNondominated(individuals, k, first_front_only=False):
     dominating_fits = defaultdict(int)
     dominated_fits = defaultdict(list)
     dominatedby_fits = defaultdict(list)
-    dominatedCount_fits = defaultdict(list)
+    dominatedCount_fits = defaultdict(int)
 
     maxValues = []
     for i, fit_i in enumerate(fits):
