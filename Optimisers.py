@@ -6,7 +6,7 @@ import random
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-def nsga2Cdom(simulator, model):
+def nsga2Cdom(simulator, model, MU, NGEN):
     creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0, -1.0, 1.0), crowding_dist=None)
     creator.create("Individual", list, fitness=creator.FitnessMulti)
     toolbox = base.Toolbox()
@@ -19,7 +19,7 @@ def nsga2Cdom(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 100
+    #MU = 100
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     # print "\n\n\n ## \n"
@@ -40,12 +40,12 @@ def nsga2Cdom(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 100
+    #NGEN = 100
 
     for gen in range(1, NGEN):
         # Vary the population
         #tools.assignCrowdingDist(pop)
-        print "Generation CDOM" + str(gen)
+        #print "Generation CDOM" + str(gen)
         offspring = tools.selTournamentDCDCdom(pop, len(pop))
         offspring = [toolbox.clone(ind) for ind in offspring]
 
@@ -72,12 +72,12 @@ def nsga2Cdom(simulator, model):
 
     #print("Final population hypervolume is %f" % tools. hypervolume(pop, [11.0, 11.0]))
 
-    print "\n \n \nFinal Population: \n\n"
-    printPopulation(pop)
+    #print "\n \n \nFinal Population: \n\n"
+    #printPopulation(pop)
 
     return pop
 
-def nsga2(simulator, model):
+def nsga2(simulator, model, MU, NGEN):
     creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0, -1.0, 1.0), crowding_dist=None)
     creator.create("Individual", list, fitness=creator.FitnessMulti)
     toolbox = base.Toolbox()
@@ -90,7 +90,7 @@ def nsga2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 100
+    #MU = 100
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     # print "\n\n\n ## \n"
@@ -111,12 +111,12 @@ def nsga2(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 100
+    #NGEN = 100
 
     for gen in range(1, NGEN):
         # Vary the population
         #tools.assignCrowdingDist(pop)
-        print "Generation NSGA" + str(gen)
+        #print "Generation NSGA" + str(gen)
         offspring = tools.selTournamentDCD(pop, len(pop))
         offspring = [toolbox.clone(ind) for ind in offspring]
 
@@ -147,7 +147,7 @@ def nsga2(simulator, model):
 
     return pop
 
-def spea2(simulator, model):
+def spea2(simulator, model, MU, NGEN):
     """ SPEA2 implementation goes here """
     simulator.setPopulationSize(100)
     simulator.generateInitialPopulation()
@@ -165,7 +165,7 @@ def spea2(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 12
+    #MU = 12
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     # pop = toolbox.population(n=MU)
     # invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -176,7 +176,7 @@ def spea2(simulator, model):
     # Step 1 Initialization
     N = 80
     Nbar = 40
-    GEN = 100
+    #NGEN = 100
     U = 0
     V = 1
     pop = toolbox.population(n=N)
@@ -195,7 +195,7 @@ def spea2(simulator, model):
         archive  = toolbox.select(pop + archive, k=Nbar)
 
         # Step 4 Termination
-        if curr_gen >= GEN:
+        if curr_gen >= NGEN:
             final_set = archive
             break
 
@@ -216,11 +216,11 @@ def spea2(simulator, model):
 
         curr_gen += 1
 
-    printPopulation(pop)
+    #printPopulation(pop)
     return pop
 
 
-def ga(simulator, model):
+def ga(simulator, model, MU, NGEN):
     """ PSO implementation goes here """
     simulator.setPopulationSize(100)
     simulator.generateInitialPopulation()
@@ -238,8 +238,9 @@ def ga(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 24
-    CXPB, MUTPB, NGEN = 0.5, 0.2, 10
+    #MU = 24
+    CXPB, MUTPB = 0.5, 0.2
+    #NGEN = 10
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -248,7 +249,7 @@ def ga(simulator, model):
         ind.fitness.values = fit
 
     for g in range(NGEN):
-        print("-- Generation %i --" % g)
+        #print("-- Generation %i --" % g)
 
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
@@ -292,8 +293,8 @@ def ga(simulator, model):
     return pop
 
 
-def runOptimiser(simulator, model, algo):
-   pop = algo(simulator, model)
+def runOptimiser(simulator, model, algo, MU, NGEN):
+   pop = algo(simulator, model, MU, NGEN)
    return [t.fitness.values for t in pop]
    #cost_nsga2 = [t.fitness.values[0] for t in pop_nsga2]
    #fr_nsga2 = [t.fitness.values[2] for t in pop_nsga2]

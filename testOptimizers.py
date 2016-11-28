@@ -50,12 +50,14 @@ def writeTruePareto(paretos, dom, folder, file):
     return reference_set
 
 def main():
-    assert len(sys.argv) == 2, "SPLOT Parser takes path to model.xml file as argument"
+    assert len(sys.argv) == 4, "SPLOT Parser takes path to model.xml file as argument"
     modelFile = sys.argv[1]
+    MU = int(sys.argv[2])
+    NGEN = int(sys.argv[3])
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
-    algos = [nsga2, nsga2Cdom]
+    algos = [ga, nsga2]
     simulator = Simulator(model)
     n = 1000
     cost = []
@@ -65,7 +67,7 @@ def main():
     true_pareto_folder = './Spread-HyperVolume/Spread/True_PF/'
     paretos = {}
     for algo in algos:
-        paretos[algo.__name__] = runOptimiser(simulator, model, algo)
+        paretos[algo.__name__] = runOptimiser(simulator, model, algo, MU, NGEN)
     writeToFile(paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
     reference_set = writeTruePareto(paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
 

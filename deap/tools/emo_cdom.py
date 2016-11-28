@@ -176,7 +176,7 @@ def sortNondominated(individuals, k, first_front_only=False):
             current_front = next_front
             next_front = []
     """
-    print pareto_sorted
+    #print pareto_sorted
     return fronts
 
 def assignCrowdingDist(individuals):
@@ -284,7 +284,7 @@ def selTournamentDCDCdom(individuals, k):
                         ind.fitness.normalisedValue.append(ind.fitness.wvalues[i])
 
         chosen = []
-        print len(individuals_1), len(individuals_2)
+        #print len(individuals_1), len(individuals_2)
         for i in xrange(0, k, 4):
             chosen.append(tourn(individuals_1[i], individuals_1[i + 1]))
             chosen.append(tourn(individuals_1[i + 2], individuals_1[i + 3]))

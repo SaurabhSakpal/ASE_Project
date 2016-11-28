@@ -134,12 +134,12 @@ def create(name, base, **kargs):
 
     """
 
-    if name in globals():
+    """if name in globals():
         warnings.warn("A class named '{0}' has already been created and it "
                       "will be overwritten. Consider deleting previous "
                       "creation of that class or rename it.".format(name),
                       RuntimeWarning)
-
+    """
     dict_inst = {}
     dict_cls = {}
     for obj_name, obj in kargs.iteritems():
