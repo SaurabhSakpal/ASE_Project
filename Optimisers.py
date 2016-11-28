@@ -19,7 +19,7 @@ def nsga2Cdom(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 12
+    MU = 100
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     # print "\n\n\n ## \n"
@@ -40,11 +40,12 @@ def nsga2Cdom(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 10
+    NGEN = 100
 
     for gen in range(1, NGEN):
         # Vary the population
         #tools.assignCrowdingDist(pop)
+        print "Generation CDOM" + str(gen)
         offspring = tools.selTournamentDCDCdom(pop, len(pop))
         offspring = [toolbox.clone(ind) for ind in offspring]
 
@@ -66,12 +67,13 @@ def nsga2Cdom(simulator, model):
         pop = toolbox.select(pop + offspring, MU)
         #record = stats.compile(pop)
         #logbook.record(gen=gen, evals=len(invalid_ind), **record)
-        #print(logbook.stream)
+        #print "\n\n\n"
+        #printPopulation(pop)
 
     #print("Final population hypervolume is %f" % tools. hypervolume(pop, [11.0, 11.0]))
 
-    # print "\n \n \nFinal Population: \n\n"
-    # printPopulation(pop)
+    print "\n \n \nFinal Population: \n\n"
+    printPopulation(pop)
 
     return pop
 
@@ -109,11 +111,12 @@ def nsga2(simulator, model):
     #pop = toolbox.select(pop, MU)
     #print "\n After Selecting \n"
     #printPopulation(pop)
-    NGEN = 10
+    NGEN = 100
 
     for gen in range(1, NGEN):
         # Vary the population
         #tools.assignCrowdingDist(pop)
+        print "Generation NSGA" + str(gen)
         offspring = tools.selTournamentDCD(pop, len(pop))
         offspring = [toolbox.clone(ind) for ind in offspring]
 

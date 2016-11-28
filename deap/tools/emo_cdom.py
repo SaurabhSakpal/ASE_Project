@@ -45,7 +45,11 @@ def selNSGA2Cdom(individuals, k, nd='standard'):
     if k > 0:
         sorted_front = sorted(pareto_fronts[-1], key=attrgetter("fitness.crowding_dist"), reverse=True)
         chosen.extend(sorted_front[:k])
-        
+    elif k < 0:
+        k = k * -1
+        chosen = chosen[:len(chosen)-k]
+
+    #print len(chosen)
     return chosen
 
 
@@ -123,8 +127,8 @@ def sortNondominated(individuals, k, first_front_only=False):
             current_front.append(fit_i)
 
     fronts = [[]]
-    for fit in current_front:
-        fronts[-1].extend(map_fit_ind[fit])
+    # for fit in current_front:
+    #     fronts[-1].extend(map_fit_ind[fit])
     pareto_sorted = len(fronts[-1])
 
     # for i, fit_i in enumerate(fits):
@@ -141,12 +145,17 @@ def sortNondominated(individuals, k, first_front_only=False):
 
     if not first_front_only:
         N = min(len(individuals), k)
-        while pareto_sorted < N:
-            fronts.append([])
+        if pareto_sorted < N:
             for count in sorted(sorted_points, reverse=True):
+                fronts.append([])
                 for fit_p in sorted_points[count]:
                     fronts[-1].extend(map_fit_ind[fit_p])
                     pareto_sorted += 1
+                    if pareto_sorted >= N:
+                        break
+                if pareto_sorted >= N:
+                    break
+
 
     """"
     # Rank the next front until all individuals are sorted or
@@ -167,7 +176,7 @@ def sortNondominated(individuals, k, first_front_only=False):
             current_front = next_front
             next_front = []
     """
-    
+    print pareto_sorted
     return fronts
 
 def assignCrowdingDist(individuals):
@@ -275,6 +284,7 @@ def selTournamentDCDCdom(individuals, k):
                         ind.fitness.normalisedValue.append(ind.fitness.wvalues[i])
 
         chosen = []
+        print len(individuals_1), len(individuals_2)
         for i in xrange(0, k, 4):
             chosen.append(tourn(individuals_1[i], individuals_1[i + 1]))
             chosen.append(tourn(individuals_1[i + 2], individuals_1[i + 3]))

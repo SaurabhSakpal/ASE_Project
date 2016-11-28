@@ -13,13 +13,13 @@ def writeToFile(paretos, folder, pareto_name):
     cc = 0
     for algo in paretos:
         fit_array = np.array(paretos[algo], dtype=float)
-        print('fit array shape',fit_array.shape)
+        #print('fit array shape',fit_array.shape)
         num_obj = fit_array.shape[1]
         fit_array_norm = np.vstack(tuple([fit_array[:,c]/max(1,np.max(fit_array[:,c])) for c in range(num_obj)]))
         #fit_array_norm = fit_array/ fit_array.max(axis=0)
         fit_array_norm = fit_array_norm.T
-        print('norm shape',fit_array_norm.shape)
-        print(fit_array_norm)
+        #print('norm shape',fit_array_norm.shape)
+        #print(fit_array_norm)
         f = open(folder+algo+'_'+pareto_name+'.txt','w')
         for i in range(fit_array_norm.shape[0]):
             print(' '.join(map(str, fit_array_norm[i,:].tolist())), file=f)

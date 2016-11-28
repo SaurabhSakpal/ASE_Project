@@ -107,7 +107,7 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
             dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
     elif parentDecision and treeNode.type == "Optional":
         if not isMutated:
-            if random.random() < 0.8:
+            if random.random() < 0.5:
                 parentDecision = nodeDecisions[treeNode.id]
                 point.append([treeNode.id, nodeDecisions[treeNode.id]])
             else:
@@ -151,7 +151,7 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
                         dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
         else:
             if treeNode.maxCardinality == 1 and treeNode.minCardinality == 1:
-                if random.random() < 0.8:
+                if random.random() < 0.5:
                     isMutated = False
                     for i in xrange(len(treeNode.children)):
                         parentDecision = nodeDecisions[treeNode.children[i].id]
@@ -171,7 +171,7 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
                             dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, True)
             elif treeNode.minCardinality == 1 and treeNode.maxCardinality == -1:
                 for i in xrange(len(treeNode.children)):
-                    if random.random() < 0.8:
+                    if random.random() < 0.5:
                         parentDecision = nodeDecisions[treeNode.children[i].id]
                         point.append([treeNode.children[i].id, nodeDecisions[treeNode.children[i].id]])
                         dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
@@ -309,40 +309,3 @@ def mutatePoints(model, ind1):
     #print str(ind1) + " ---> " + str(ind)
     for index in range(len(ind)):
         ind1[index] = ind[index]
-
-def selectNSGA2(individuals, k, nd='standard'):
-    """Apply NSGA-II selection operator on the *individuals*. Usually, the
-    size of *individuals* will be larger than *k* because any individual
-    present in *individuals* will appear in the returned list at most once.
-    Having the size of *individuals* equals to *k* will have no effect other
-    than sorting the population according to their front rank. The
-    list returned contains references to the input *individuals*. For more
-    details on the NSGA-II operator see [Deb2002]_.
-    
-    :param individuals: A list of individuals to select from.
-    :param k: The number of individuals to select.
-    :param nd: Specify the non-dominated algorithm to use: 'standard' or 'log'.
-    :returns: A list of selected individuals.
-    
-    .. [Deb2002] Deb, Pratab, Agarwal, and Meyarivan, "A fast elitist
-       non-dominated sorting genetic algorithm for multi-objective
-       optimization: NSGA-II", 2002.
-    """
-    if nd == 'standard':
-        pareto_fronts = sortNondominated(individuals, k)
-    elif nd == 'log':
-        pareto_fronts = sortLogNondominated(individuals, k)
-    else:
-        raise Exception('selNSGA2: The choice of non-dominated sorting '
-                        'method "{0}" is invalid.'.format(nd))
-
-    for front in pareto_fronts:
-        assignCrowdingDist(front)
-    
-    chosen = list(chain(*pareto_fronts[:-1]))
-    k = k - len(chosen)
-    if k > 0:
-        sorted_front = sorted(pareto_fronts[-1], key=attrgetter("fitness.crowding_dist"), reverse=True)
-        chosen.extend(sorted_front[:k])
-        
-    return chosen
