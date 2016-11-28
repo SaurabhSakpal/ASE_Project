@@ -3,6 +3,7 @@ from deap import creator
 from deap import tools
 from GAMethods import *
 import random
+from collections import defaultdict
 import matplotlib.pyplot as plt
 
 def nsga2Cdom(simulator, model):
@@ -18,7 +19,7 @@ def nsga2Cdom(simulator, model):
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
-    MU = 100
+    MU = 12
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     # print "\n\n\n ## \n"

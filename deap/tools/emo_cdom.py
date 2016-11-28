@@ -138,7 +138,6 @@ def sortNondominated(individuals, k, first_front_only=False):
     test = []
     for key, value in sorted(dominatedCount_fits.iteritems()):
         sorted_points[value].append(key)
-        #test.append(value)
 
     if not first_front_only:
         N = min(len(individuals), k)
@@ -229,8 +228,51 @@ def selTournamentDCDCdom(individuals, k):
                 return ind1
             return ind2
 
+        # start
+        map_fit_ind = defaultdict(list)
+        for ind in individuals:
+            map_fit_ind[ind.fitness].append(ind)
+        fits = map_fit_ind.keys()
+
+        maxValues = []
+        for i, fit_i in enumerate(fits):
+            if i == 0:
+                maxValues = list(fit_i.values)
+            else:
+                for i in range(len(fit_i.values)):
+                    if maxValues[i] < fit_i.values[i]:
+                        maxValues[i] = fit_i.values[i]
+
+        # print maxValues
+
+        for i, fit_i in enumerate(fits):
+            normalised_value = []
+            for j in range(len(fit_i.values)):
+                if maxValues[j] != 0:
+                    normalised_value.append(fit_i.wvalues[j] / maxValues[j])
+                else:
+                    normalised_value.append(fit_i.wvalues[j])
+            fit_i.normalisedValue = normalised_value
+
+        # end
         individuals_1 = random.sample(individuals, len(individuals))
         individuals_2 = random.sample(individuals, len(individuals))
+
+        for ind in individuals_1:
+            if len(ind.fitness.normalisedValue) == 0:
+                for i in xrange(len(maxValues)):
+                    if maxValues[i] != 0:
+                        ind.fitness.normalisedValue.append(ind.fitness.wvalues[i] / maxValues[i])
+                    else:
+                        ind.fitness.normalisedValue.append(ind.fitness.wvalues[i])
+
+        for ind in individuals_2:
+            if len(ind.fitness.normalisedValue) == 0:
+                for i in xrange(len(maxValues)):
+                    if maxValues[i] != 0:
+                        ind.fitness.normalisedValue.append(ind.fitness.wvalues[i] / maxValues[i])
+                    else:
+                        ind.fitness.normalisedValue.append(ind.fitness.wvalues[i])
 
         chosen = []
         for i in xrange(0, k, 4):
