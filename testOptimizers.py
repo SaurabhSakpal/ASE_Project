@@ -85,5 +85,7 @@ def main():
     print('IGD values MU=%d NGEN=%d Mu=%f' % (MU,NGEN,mutatePercentage))
     for opt in opt2paretos:
         print(opt+' = ',utils.igd(opt2paretos[opt],reference_set))
+
+    print('\n')
 if __name__ == "__main__":
     main()
