@@ -1,6 +1,7 @@
 from __future__ import print_function
 import sys
 import os
+import time
 import numpy as np
 from parser import SPLOTParser
 from Simulator import Simulator
@@ -62,7 +63,7 @@ def main():
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
-    optimisers = [ga, nsga2]
+    optimisers = [nsga2Cdom, ga]
     simulator = Simulator(model)
     cost = []
     violations = []
@@ -75,7 +76,10 @@ def main():
     create_folder(true_pareto_folder)
     opt2paretos = {}
     for optimiser in optimisers:
+        start_time = time.time()
         opt2paretos[optimiser.__name__] = runOptimiser(simulator, model, optimiser, MU, NGEN, mutatePercentage)
+        print(optimiser.__name__+" took %s sec" % (time.time() - start_time))
+    
     writeToFile(opt2paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
     reference_set = writeTruePareto(opt2paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
     for opt in opt2paretos:
