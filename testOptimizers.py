@@ -65,7 +65,6 @@ def main():
     opt2paretos = {}
     for optimiser in optimisers:
         opt2paretos[optimiser.__name__] = runOptimiser(simulator, model, optimiser, MU, NGEN)
-        print('done running'+optimiser.__name__)
     writeToFile(opt2paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
     reference_set = writeTruePareto(opt2paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
 
