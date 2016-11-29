@@ -24,9 +24,9 @@ def writeToFile(opt2paretos, folder, pareto_name):
         for i in range(fit_array_norm.shape[0]):
             print(' '.join(map(str, fit_array_norm[i,:].tolist())), file=f)
         
-        plt.scatter(fit_array_norm[:,0],fit_array_norm[:,2], color=colors[cc])
+        #plt.scatter(fit_array_norm[:,0],fit_array_norm[:,2], color=colors[cc])
         cc += 1
-    plt.savefig('./graphs/pareto_'+pareto_name+'.png')
+    #plt.savefig('./graphs/pareto_'+pareto_name+'.png')
 
 def writeTruePareto(opt2paretos, dom, folder, file):
     reference_set = []
@@ -63,7 +63,7 @@ def main():
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
-    optimisers = [nsga2Cdom, ga]
+    optimisers = [nsga, spea2, nsga2Cdom, ga]
     simulator = Simulator(model)
     cost = []
     violations = []
@@ -82,8 +82,8 @@ def main():
     
     writeToFile(opt2paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
     reference_set = writeTruePareto(opt2paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
+    print('IGD values MU=%d NGEN=%d Mu=%f' % (MU,NGEN,mutatePercentage))
     for opt in opt2paretos:
-        print('IGD values MU=%d NGEN=%d Mu=%f' % (MU,NGEN,mutatePercentage))
         print(opt+' = ',utils.igd(opt2paretos[opt],reference_set))
 if __name__ == "__main__":
     main()
