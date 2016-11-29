@@ -98,8 +98,6 @@ class Simulator:
         for i in xrange(count):
             point = []
             self.dfs(self.model.root, point, True)
-            #print point
-            print "\n"
             n_point_list.append(Point(self.model, point))
         return n_point_list
 
@@ -117,7 +115,6 @@ class Simulator:
                 mult = - 1 if clause[0] == '~' else 1
                 clause_encoding.append(mult * tag2id[node_tag])
             sat_input.append(clause_encoding)
-        #print sat_input
         sat_input.append([tag2id['_r']])
         validPopulation = []
         count = 0
@@ -128,12 +125,10 @@ class Simulator:
                 break
         if count == 0:
             raise Exception('Can not solve for constraints')
-        #print 'count =', count
         population = []
         for index in xrange(len(validPopulation)):
             ind = [1 if i > 0 else 0 for i in validPopulation[index]]
             population.append(ind)
-        print population
         return population
 
     def satSolveCrossTreeConstraints(self):
@@ -153,14 +148,12 @@ class Simulator:
                 clause_encoding.append(mult * tag2id[node_tag])
             sat_input.append(clause_encoding)
         print id2tag
-        #print sat_input
         count = 0
         for sol in pycosat.itersolve(sat_input):
             mandatoryNodes.append(sol)
             if count == (self.population_limit * 10):
                 break
             count += 1
-        print 'count =', count
         allPartialSolutions = []
         for partialSolution in mandatoryNodes:
             solnMap = {}
@@ -170,7 +163,6 @@ class Simulator:
                 else:
                     solnMap[id2tag[i*-1]] = False
             allPartialSolutions.append(solnMap)
-        #print allPartialSolutions
         return allPartialSolutions
 
     def dfsPartial(self, treeNode, point, parentDecision, partialSolutionMap):
@@ -231,9 +223,6 @@ class Simulator:
     def solveTree(self):
         partialSolutions = self.satSolveCrossTreeConstraints()
         for soln in partialSolutions:
-            #print "\n\n\n"
-            print len(soln)
-            #print "\n"
             for key in list(soln):
                 temp = self.model.treeNodeMap[key]
                 if soln[key]:
@@ -243,10 +232,6 @@ class Simulator:
                             soln[temp.id] = True
                         else:
                             temp = temp.parentNode
-            #print soln
-            #print sorted(soln.items())
         for i in partialSolutions:
             point = []
-            print len(i)
-            #self.dfsPartial(self.model.root, point, True, i)
         return []
