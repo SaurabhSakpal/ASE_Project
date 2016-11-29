@@ -63,7 +63,7 @@ def main():
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
-    optimisers = [nsga, spea2, nsga2Cdom, ga]
+    optimisers = [nsga2, spea2, nsga2Cdom, ga]
     simulator = Simulator(model)
     cost = []
     violations = []
