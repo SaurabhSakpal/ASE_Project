@@ -1,5 +1,6 @@
 from __future__ import print_function
 import sys
+import os
 import numpy as np
 from parser import SPLOTParser
 from Simulator import Simulator
@@ -47,12 +48,17 @@ def writeTruePareto(opt2paretos, dom, folder, file):
 
     return reference_set
 
+def create_folder(folder):
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+
 def main():
-    assert len(sys.argv) == 5, "SPLOT Parser takes path to model.xml file as argument"
+    assert len(sys.argv) == 6, "SPLOT Parser takes path to model.xml file as argument"
     modelFile = sys.argv[1]
-    MU = int(sys.argv[2])
-    NGEN = int(sys.argv[3])
-    mutatePercentage = float(sys.argv[4])
+    config_id = sys.argv[2]
+    MU = int(sys.argv[3])
+    NGEN = int(sys.argv[4])
+    mutatePercentage = float(sys.argv[5])
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
@@ -62,8 +68,11 @@ def main():
     violations = []
     num_features = []
 
-    pareto_folder = './output/Pareto_Fronts/'
-    true_pareto_folder = './output/True_PF/'
+    pareto_folder = './output/'+config_id+'/'+'Pareto_Fronts/'
+    true_pareto_folder = './output/'+config_id+'/'+'True_PF/'
+
+    create_folder(pareto_folder)
+    create_folder(true_pareto_folder)
     opt2paretos = {}
     for optimiser in optimisers:
         opt2paretos[optimiser.__name__] = runOptimiser(simulator, model, optimiser, MU, NGEN, mutatePercentage)
