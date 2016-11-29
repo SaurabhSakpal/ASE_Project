@@ -16,36 +16,16 @@ def nsga2Cdom(simulator, model, MU, NGEN):
     toolbox.register("select", tools.selNSGA2Cdom)
     toolbox.register("mate", matePoints, model)
     toolbox.register("mutate", mutatePoints, model)
-    # ind1 = toolbox.individual()
-    # print ind1
-    # print ind1.fitness.valid
-    #MU = 100
+
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
-    # print "\n\n\n ## \n"
-    # print pop[0]
-    # print toolbox.evaluate(pop[0])
-    # print pop[0].fitness.valid
 
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
     fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
     for ind, fit in zip(invalid_ind, fitnesses):
         ind.fitness.values = fit
 
-    # printPopulation(pop)
-
-    # print pop[0].fitness.valid
-    # This is just to assign the crowding distance to the individuals
-    # no actual selection is done
-    #pop = toolbox.select(pop, MU)
-    #print "\n After Selecting \n"
-    #printPopulation(pop)
-    #NGEN = 100
-
     for gen in range(1, NGEN):
-        # Vary the population
-        #tools.assignCrowdingDist(pop)
-        #print "Generation CDOM" + str(gen)
         offspring = tools.selTournamentDCDCdom(pop, len(pop))
         offspring = [toolbox.clone(ind) for ind in offspring]
 
@@ -65,15 +45,6 @@ def nsga2Cdom(simulator, model, MU, NGEN):
 
         # Select the next generation population
         pop = toolbox.select(pop + offspring, MU)
-        #record = stats.compile(pop)
-        #logbook.record(gen=gen, evals=len(invalid_ind), **record)
-        #print "\n\n\n"
-        #printPopulation(pop)
-
-    #print("Final population hypervolume is %f" % tools. hypervolume(pop, [11.0, 11.0]))
-
-    #print "\n \n \nFinal Population: \n\n"
-    #printPopulation(pop)
 
     return pop
 
@@ -87,36 +58,17 @@ def nsga2(simulator, model, MU, NGEN):
     toolbox.register("select", tools.selNSGA2)
     toolbox.register("mate", matePoints, model)
     toolbox.register("mutate", mutatePoints, model)
-    # ind1 = toolbox.individual()
-    # print ind1
-    # print ind1.fitness.valid
-    #MU = 100
+
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
-    # print "\n\n\n ## \n"
-    # print pop[0]
-    # print toolbox.evaluate(pop[0])
-    # print pop[0].fitness.valid
 
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
     fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
     for ind, fit in zip(invalid_ind, fitnesses):
         ind.fitness.values = fit
 
-    # printPopulation(pop)
-
-    # print pop[0].fitness.valid
-    # This is just to assign the crowding distance to the individuals
-    # no actual selection is done
-    #pop = toolbox.select(pop, MU)
-    #print "\n After Selecting \n"
-    #printPopulation(pop)
-    #NGEN = 100
-
     for gen in range(1, NGEN):
         # Vary the population
-        #tools.assignCrowdingDist(pop)
-        #print "Generation NSGA" + str(gen)
         offspring = tools.selTournamentDCD(pop, len(pop))
         offspring = [toolbox.clone(ind) for ind in offspring]
 
@@ -136,14 +88,6 @@ def nsga2(simulator, model, MU, NGEN):
 
         # Select the next generation population
         pop = toolbox.select(pop + offspring, MU)
-        #record = stats.compile(pop)
-        #logbook.record(gen=gen, evals=len(invalid_ind), **record)
-        #print(logbook.stream)
-
-    #print("Final population hypervolume is %f" % tools. hypervolume(pop, [11.0, 11.0]))
-
-    # print "\n \n \nFinal Population: \n\n"
-    # printPopulation(pop)
 
     return pop
 
@@ -162,21 +106,12 @@ def spea2(simulator, model, MU, NGEN):
     toolbox.register("mutate", mutatePoints, model)
     # binary tournament selection
     toolbox.register("selectTournament", tools.selTournament, tournsize=2)
-    # ind1 = toolbox.individual()
-    # print ind1
-    # print ind1.fitness.valid
-    #MU = 12
+
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-    # pop = toolbox.population(n=MU)
-    # invalid_ind = [ind for ind in pop if not ind.fitness.valid]
-    # fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-    # for ind, fit in zip(invalid_ind, fitnesses):
-    #     ind.fitness.values = fit
 
     # Step 1 Initialization
     N = 80
     Nbar = 40
-    #NGEN = 100
     U = 0
     V = 1
     pop = toolbox.population(n=N)
@@ -216,12 +151,11 @@ def spea2(simulator, model, MU, NGEN):
 
         curr_gen += 1
 
-    #printPopulation(pop)
     return pop
 
 
 def ga(simulator, model, MU, NGEN):
-    """ PSO implementation goes here """
+    """ GA implementation goes here """
     simulator.setPopulationSize(100)
     simulator.generateInitialPopulation()
     creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0, -1.0, 1.0), crowding_dist=None)
@@ -233,14 +167,9 @@ def ga(simulator, model, MU, NGEN):
     toolbox.register("select", tools.selSPEA2)
     toolbox.register("mate", matePoints, model)
     toolbox.register("mutate", mutatePoints, model)
-    # binary tournament selection
     toolbox.register("selectTournament", tools.selTournament, tournsize=2)
-    # ind1 = toolbox.individual()
-    # print ind1
-    # print ind1.fitness.valid
-    #MU = 24
+
     CXPB, MUTPB = 0.5, 0.2
-    #NGEN = 10
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     pop = toolbox.population(n=MU)
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -281,21 +210,15 @@ def ga(simulator, model, MU, NGEN):
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
 
-        #print("  Evaluated %i individuals" % len(invalid_ind))
-
         # The population is entirely replaced by the offspring
         pop[:] = offspring
 
         # Gather all the fitnesses in one list and print the stats
         fits = [ind.fitness.values[0] for ind in pop]
 
-    #printPopulation(pop)
     return pop
 
 
 def runOptimiser(simulator, model, algo, MU, NGEN):
    pop = algo(simulator, model, MU, NGEN)
    return [t.fitness.values for t in pop]
-   #cost_nsga2 = [t.fitness.values[0] for t in pop_nsga2]
-   #fr_nsga2 = [t.fitness.values[2] for t in pop_nsga2]
-   #plt.show()
