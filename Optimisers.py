@@ -6,7 +6,7 @@ import random
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-def nsga2Cdom(simulator, model, MU, NGEN):
+def nsga2Cdom(simulator, model, MU, NGEN, mutatePercentage):
     creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0, -1.0, 1.0), crowding_dist=None)
     creator.create("Individual", list, fitness=creator.FitnessMulti)
     toolbox = base.Toolbox()
@@ -15,7 +15,7 @@ def nsga2Cdom(simulator, model, MU, NGEN):
     toolbox.register("evaluate", evaluateObjectives, model)
     toolbox.register("select", tools.selNSGA2Cdom)
     toolbox.register("mate", matePoints, model)
-    toolbox.register("mutate", mutatePoints, model)
+    toolbox.register("mutate", mutatePoints, model, mutatePercentage)
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
@@ -77,7 +77,7 @@ def nsga2Cdom(simulator, model, MU, NGEN):
 
     return pop
 
-def nsga2(simulator, model, MU, NGEN):
+def nsga2(simulator, model, MU, NGEN, mutatePercentage):
     creator.create("FitnessMulti", base.Fitness, weights=(-1.0, -1.0, 1.0, -1.0, 1.0), crowding_dist=None)
     creator.create("Individual", list, fitness=creator.FitnessMulti)
     toolbox = base.Toolbox()
@@ -86,7 +86,7 @@ def nsga2(simulator, model, MU, NGEN):
     toolbox.register("evaluate", evaluateObjectives, model)
     toolbox.register("select", tools.selNSGA2)
     toolbox.register("mate", matePoints, model)
-    toolbox.register("mutate", mutatePoints, model)
+    toolbox.register("mutate", mutatePoints, model, mutatePercentage)
     # ind1 = toolbox.individual()
     # print ind1
     # print ind1.fitness.valid
@@ -147,7 +147,7 @@ def nsga2(simulator, model, MU, NGEN):
 
     return pop
 
-def spea2(simulator, model, MU, NGEN):
+def spea2(simulator, model, MU, NGEN, mutatePercentage):
     """ SPEA2 implementation goes here """
     simulator.setPopulationSize(100)
     simulator.generateInitialPopulation()
@@ -159,7 +159,7 @@ def spea2(simulator, model, MU, NGEN):
     toolbox.register("evaluate", evaluateObjectives, model)
     toolbox.register("select", tools.selSPEA2)
     toolbox.register("mate", matePoints, model)
-    toolbox.register("mutate", mutatePoints, model)
+    toolbox.register("mutate", mutatePoints, model, mutatePercentage)
     # binary tournament selection
     toolbox.register("selectTournament", tools.selTournament, tournsize=2)
     # ind1 = toolbox.individual()
@@ -220,7 +220,7 @@ def spea2(simulator, model, MU, NGEN):
     return pop
 
 
-def ga(simulator, model, MU, NGEN):
+def ga(simulator, model, MU, NGEN, mutatePercentage):
     """ PSO implementation goes here """
     simulator.setPopulationSize(100)
     simulator.generateInitialPopulation()
@@ -230,9 +230,9 @@ def ga(simulator, model, MU, NGEN):
     toolbox.register("splot_point", getSATSolverGeneratedPoint, simulator)
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.splot_point)
     toolbox.register("evaluate", evaluateObjectives, model)
-    toolbox.register("select", tools.selSPEA2)
+    toolbox.register("select", tools.selRandom)
     toolbox.register("mate", matePoints, model)
-    toolbox.register("mutate", mutatePoints, model)
+    toolbox.register("mutate", mutatePoints, model, mutatePercentage)
     # binary tournament selection
     toolbox.register("selectTournament", tools.selTournament, tournsize=2)
     # ind1 = toolbox.individual()
@@ -293,8 +293,8 @@ def ga(simulator, model, MU, NGEN):
     return pop
 
 
-def runOptimiser(simulator, model, algo, MU, NGEN):
-   pop = algo(simulator, model, MU, NGEN)
+def runOptimiser(simulator, model, algo, MU, NGEN, mutatePercentage):
+   pop = algo(simulator, model, MU, NGEN, mutatePercentage)
    return [t.fitness.values for t in pop]
    #cost_nsga2 = [t.fitness.values[0] for t in pop_nsga2]
    #fr_nsga2 = [t.fitness.values[2] for t in pop_nsga2]
