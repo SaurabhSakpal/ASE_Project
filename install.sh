@@ -1,5 +1,5 @@
 #!/bin/bash
 
-
+sudo apt-get install pip
 sudo pip install pycosat
-sudo pip install numpy
+sudo pip install scipy
