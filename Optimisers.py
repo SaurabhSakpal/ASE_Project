@@ -219,6 +219,6 @@ def ga(simulator, model, MU, NGEN):
     return pop
 
 
-def runOptimiser(simulator, model, algo, MU, NGEN):
-   pop = algo(simulator, model, MU, NGEN)
+def runOptimiser(simulator, model, optimiser, MU, NGEN):
+   pop = optimiser(simulator, model, MU, NGEN)
    return [t.fitness.values for t in pop]

@@ -8,11 +8,11 @@ from Optimisers import *
 import matplotlib.pyplot as plt
 import utils
 
-def writeToFile(paretos, folder, pareto_name):
+def writeToFile(opt2paretos, folder, pareto_name):
     colors = ['r','b']
     cc = 0
-    for algo in paretos:
-        fit_array = np.array(paretos[algo], dtype=float)
+    for opt in opt2paretos:
+        fit_array = np.array(opt2paretos[opt], dtype=float)
         #print('fit array shape',fit_array.shape)
         num_obj = fit_array.shape[1]
         fit_array_norm = np.vstack(tuple([fit_array[:,c]/max(1,np.max(fit_array[:,c])) for c in range(num_obj)]))
@@ -20,20 +20,20 @@ def writeToFile(paretos, folder, pareto_name):
         fit_array_norm = fit_array_norm.T
         #print('norm shape',fit_array_norm.shape)
         #print(fit_array_norm)
-        f = open(folder+algo+'_'+pareto_name+'.txt','w')
+        f = open(folder+opt+'_'+pareto_name+'.txt','w')
         for i in range(fit_array_norm.shape[0]):
             print(' '.join(map(str, fit_array_norm[i,:].tolist())), file=f)
         
-        plt.scatter(fit_array_norm[:,0],fit_array_norm[:,2], color=colors[cc])
+        plt.scatter(fit_array_norm[:,0],fopt2paretosit_array_norm[:,2], color=colors[cc])
         cc += 1
     plt.savefig('./graphs/pareto.png')
 
-def writeTruePareto(paretos, dom, folder, file):
+def writeTruePareto(opt2paretos, dom, folder, file):
     reference_set = []
-    retain_size = sum([len(paretos[k]) for k in paretos])/len(paretos)
+    retain_size = sum([len(opt2paretos[k]) for k in opt2paretos])/len(opt2paretos)
     print('retain_size = ', retain_size)
-    for algo in paretos:
-        reference_set.extend(paretos[algo])
+    for opt in opt2paretos:
+        reference_set.extend(opt2paretos[opt])
     #reference_set = np.array(reference_set, dtype=float)
     def fitness(one, dom):
         return len([1 for another in reference_set if dom(one, another,[-1.0, -1.0, 1.0, -1.0, 1.0])])
@@ -57,21 +57,20 @@ def main():
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
-    algos = [ga, nsga2]
+    optimisers = [ga, nsga2]
     simulator = Simulator(model)
-    n = 1000
     cost = []
     violations = []
     num_features = []
     pareto_folder = './Spread-HyperVolume/HyperVolume/Pareto_Fronts/'
     true_pareto_folder = './Spread-HyperVolume/Spread/True_PF/'
-    paretos = {}
-    for algo in algos:
-        paretos[algo.__name__] = runOptimiser(simulator, model, algo, MU, NGEN)
-    writeToFile(paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
-    reference_set = writeTruePareto(paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
+    opt2paretos = {}
+    for optimiser in optimisers:
+        opt2paretos[optimiser.__name__] = runOptimiser(simulator, model, optimiser, MU, NGEN)
+    writeToFile(opt2paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
+    reference_set = writeTruePareto(opt2paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
 
-    for opt in paretos:
-        print(opt+' = ',utils.igd(paretos[opt],reference_set))
+    for opt in opt2paretos:
+        print(opt+' = ',utils.igd(opt2paretos[opt],reference_set))
 if __name__ == "__main__":
     main()
