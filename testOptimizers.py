@@ -83,6 +83,7 @@ def main():
     writeToFile(opt2paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
     reference_set = writeTruePareto(opt2paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
     for opt in opt2paretos:
+        print('IGD values MU=%d NGEN=%d Mu=%f' % (MU,NGEN,mutatePercentage))
         print(opt+' = ',utils.igd(opt2paretos[opt],reference_set))
 if __name__ == "__main__":
     main()
