@@ -48,10 +48,11 @@ def writeTruePareto(opt2paretos, dom, folder, file):
     return reference_set
 
 def main():
-    assert len(sys.argv) == 4, "SPLOT Parser takes path to model.xml file as argument"
+    assert len(sys.argv) == 5, "SPLOT Parser takes path to model.xml file as argument"
     modelFile = sys.argv[1]
     MU = int(sys.argv[2])
     NGEN = int(sys.argv[3])
+    mutatePercentage = float(sys.argv[4])
     model = SPLOTParser().parse(modelFile)
     model.generateTreeStructureConstraints(model.root)
 
@@ -60,14 +61,14 @@ def main():
     cost = []
     violations = []
     num_features = []
+
     pareto_folder = './output/Pareto_Fronts/'
     true_pareto_folder = './output/True_PF/'
     opt2paretos = {}
     for optimiser in optimisers:
-        opt2paretos[optimiser.__name__] = runOptimiser(simulator, model, optimiser, MU, NGEN)
+        opt2paretos[optimiser.__name__] = runOptimiser(simulator, model, optimiser, MU, NGEN, mutatePercentage)
     writeToFile(opt2paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
     reference_set = writeTruePareto(opt2paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
-
     for opt in opt2paretos:
         print(opt+' = ',utils.igd(opt2paretos[opt],reference_set))
 if __name__ == "__main__":

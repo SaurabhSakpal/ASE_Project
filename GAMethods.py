@@ -99,15 +99,15 @@ def getOrRelationshipChoiceString(numberOfChild):
         # print binaryString
         return binaryString
 
-def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
+def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated, mutatePercentage):
     if parentDecision and treeNode.type == "Mandatory":
         point.append([treeNode.id, nodeDecisions[treeNode.id]])
         parentDecision = True
         for i in xrange(len(treeNode.children)):
-            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
     elif parentDecision and treeNode.type == "Optional":
         if not isMutated:
-            if random.random() < 0.5:
+            if random.random() < mutatePercentage:
                 parentDecision = nodeDecisions[treeNode.id]
                 point.append([treeNode.id, nodeDecisions[treeNode.id]])
             else:
@@ -115,16 +115,16 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
                 parentDecision = not nodeDecisions[treeNode.id]
                 point.append([treeNode.id, not nodeDecisions[treeNode.id]])
             for i in xrange(len(treeNode.children)):
-                dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+                dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
         else:
-            if random.random() < 0.5:
+            if random.random() < mutatePercentage:
                 parentDecision = True
                 point.append([treeNode.id, True])
             else:
                 parentDecision = False
                 point.append([treeNode.id, False])
             for i in xrange(len(treeNode.children)):
-                dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+                dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
     elif parentDecision and treeNode.type == "Featured Group":
         if isMutated:
             if treeNode.maxCardinality == 1 and treeNode.minCardinality == 1:
@@ -133,30 +133,30 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
                     if index == i:
                         parentDecision = True
                         point.append([treeNode.children[i].id, True])
-                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
                     else:
                         parentDecision = False
                         point.append([treeNode.children[i].id, False])
-                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
             elif treeNode.minCardinality == 1 and treeNode.maxCardinality == -1:
                 choiceString = getOrRelationshipChoiceString(len(treeNode.children))
                 for i in xrange(len(treeNode.children)):
                     if choiceString[i] == '1':
                         parentDecision = True
                         point.append([treeNode.children[i].id, True])
-                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
                     else:
                         parentDecision = False
                         point.append([treeNode.children[i].id, False])
-                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
         else:
             if treeNode.maxCardinality == 1 and treeNode.minCardinality == 1:
-                if random.random() < 0.5:
+                if random.random() < mutatePercentage:
                     isMutated = False
                     for i in xrange(len(treeNode.children)):
                         parentDecision = nodeDecisions[treeNode.children[i].id]
                         point.append([treeNode.children[i].id, nodeDecisions[treeNode.children[i].id]])
-                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, False)
+                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, False, mutatePercentage)
                 else:
                     isMutated = True
                     index = random.choice(xrange(len(treeNode.children)))
@@ -164,30 +164,30 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
                         if index == i:
                             parentDecision = True
                             point.append([treeNode.children[i].id, True])
-                            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, True)
+                            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, True, mutatePercentage)
                         else:
                             parentDecision = False
                             point.append([treeNode.children[i].id, False])
-                            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, True)
+                            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, True, mutatePercentage)
             elif treeNode.minCardinality == 1 and treeNode.maxCardinality == -1:
                 for i in xrange(len(treeNode.children)):
-                    if random.random() < 0.5:
+                    if random.random() < mutatePercentage:
                         parentDecision = nodeDecisions[treeNode.children[i].id]
                         point.append([treeNode.children[i].id, nodeDecisions[treeNode.children[i].id]])
-                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
                     else:
                         parentDecision = not nodeDecisions[treeNode.children[i].id]
                         point.append([treeNode.children[i].id, (not nodeDecisions[treeNode.children[i].id])])
-                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, True)
+                        dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, True, mutatePercentage)
 
     elif parentDecision and treeNode.type == "Group":
         for i in xrange(len(treeNode.children)):
-            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
     elif parentDecision and treeNode.type == "Root":
         point.append([treeNode.id, True])
         parentDecision = True
         for i in xrange(len(treeNode.children)):
-            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, False)
+            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, False, mutatePercentage)
     elif not parentDecision:
         if treeNode.type == "Mandatory" or treeNode.type == "Optional":
             point.append([treeNode.id, False])
@@ -195,7 +195,7 @@ def dfs_mutate(treeNode, point, parentDecision, nodeDecisions, isMutated):
             for i in xrange(len(treeNode.children)):
                 point.append([treeNode.children[i].id, False])
         for i in xrange(len(treeNode.children)):
-            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated)
+            dfs_mutate(treeNode.children[i], point, parentDecision, nodeDecisions, isMutated, mutatePercentage)
 
 
 def dfs_mate(treeNode, point, parentDecision, dadDecisions, momDecisions, selectedParent):
@@ -298,13 +298,14 @@ def matePoints(model, ind1, ind2):
         ind2[index] = i2[index]
 
 
-def mutatePoints(model, ind1):
+def mutatePoints(model, mutatePercentage, ind1):
     """ Logic for mutation goes here """
+
     nodeDecisions = {}
     for index in range(len(ind1)):
         nodeDecisions[model.nodeOrder[index]] = (ind1[index]==1)
     point = []
-    dfs_mutate(model.root , point, True, nodeDecisions, False)
+    dfs_mutate(model.root , point, True, nodeDecisions, False, mutatePercentage)
     ind = [1 if i[1] == True else 0 for i in point]
     #print str(ind1) + " ---> " + str(ind)
     for index in range(len(ind)):
