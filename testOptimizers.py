@@ -13,25 +13,23 @@ def writeToFile(opt2paretos, folder, pareto_name):
     cc = 0
     for opt in opt2paretos:
         fit_array = np.array(opt2paretos[opt], dtype=float)
-        #print('fit array shape',fit_array.shape)
         num_obj = fit_array.shape[1]
         fit_array_norm = np.vstack(tuple([fit_array[:,c]/max(1,np.max(fit_array[:,c])) for c in range(num_obj)]))
         #fit_array_norm = fit_array/ fit_array.max(axis=0)
         fit_array_norm = fit_array_norm.T
-        #print('norm shape',fit_array_norm.shape)
-        #print(fit_array_norm)
+
         f = open(folder+opt+'_'+pareto_name+'.txt','w')
         for i in range(fit_array_norm.shape[0]):
             print(' '.join(map(str, fit_array_norm[i,:].tolist())), file=f)
         
-        plt.scatter(fit_array_norm[:,0],fopt2paretosit_array_norm[:,2], color=colors[cc])
+        plt.scatter(fit_array_norm[:,0],fit_array_norm[:,2], color=colors[cc])
         cc += 1
-    plt.savefig('./graphs/pareto.png')
+    plt.savefig('./graphs/pareto_'+pareto_name+'.png')
 
 def writeTruePareto(opt2paretos, dom, folder, file):
     reference_set = []
     retain_size = sum([len(opt2paretos[k]) for k in opt2paretos])/len(opt2paretos)
-    print('retain_size = ', retain_size)
+    #print('retain_size = ', retain_size)
     for opt in opt2paretos:
         reference_set.extend(opt2paretos[opt])
     #reference_set = np.array(reference_set, dtype=float)
@@ -62,11 +60,12 @@ def main():
     cost = []
     violations = []
     num_features = []
-    pareto_folder = './Spread-HyperVolume/HyperVolume/Pareto_Fronts/'
-    true_pareto_folder = './Spread-HyperVolume/Spread/True_PF/'
+    pareto_folder = './output/Pareto_Fronts/'
+    true_pareto_folder = './output/True_PF/'
     opt2paretos = {}
     for optimiser in optimisers:
         opt2paretos[optimiser.__name__] = runOptimiser(simulator, model, optimiser, MU, NGEN)
+        print('done running'+optimiser.__name__)
     writeToFile(opt2paretos, pareto_folder, modelFile.split('/')[1].split('.')[0])
     reference_set = writeTruePareto(opt2paretos, utils.bdom, true_pareto_folder, modelFile.split('/')[1].split('.')[0])
 
