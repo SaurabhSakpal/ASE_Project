@@ -1,0 +1,87 @@
+<!-- This model was created online using SPLOT's Feature Model Editor (http://www.splot-research.org) on Sat, Feb 27, 2016 - 8:29 PM  -->
+<feature_model name="Computadores">
+<meta>
+<data name="description">Diagrama de caracteristicas</data>
+<data name="creator">Karen Vega</data>
+<data name="address"></data>
+<data name="email">ky.vega@uniandes.edu.co</data>
+<data name="phone"></data>
+<data name="website"></data>
+<data name="organization">Universidad de los Andes</data>
+<data name="department"></data>
+<data name="date"></data>
+<data name="reference"></data>
+</meta>
+<feature_tree>
+:r Computador(_r) $91$
+	:m Tipo(_r_1) $62$
+		:g (_r_1_64) [1,*] 
+			: Mesa(_r_1_64_65) $44$ #71# %12%
+			: Portatil(_r_1_64_66) $47$ #77# %17%
+			: Servidor(_r_1_64_67) $45$ #72# %13%
+	:m Marca(_r_3) $26$
+		:g (_r_3_68) [1,*] 
+			: Dell(_r_3_68_69) $88$ #42# %61%
+			: Lenovo(_r_3_68_70) $83$ #44# %69%
+			: Toshiba(_r_3_68_71) $71$ #48# %62%
+			: Apple(_r_3_68_72) $60$ #49# %66%
+			: Clon(_r_3_68_73) $35$ #40# %63%
+	:m SO(_r_4) $42$
+		:g (_r_4_17) [1,*]
+			: SO para computadores(_r_4_17_18) $48$
+				:g (_r_4_17_18_21) [1,*]
+					: Windows 10(_r_4_17_18_21_22) $41$ #43# %71%
+					: Fedora(_r_4_17_18_21_23) $40$ #48# %77%
+					: OS X Yosemite(_r_4_17_18_21_25) $49$ #47# %79%
+			: SO para servidores(_r_4_17_24) $45$
+				:g (_r_4_17_24_26) [1,*]
+					: Windows server(_r_4_17_24_26_27) $59$ #23# %61%
+					: Red Hat(_r_4_17_24_26_28) $23$ #26# %68%
+					: OS X Server(_r_4_17_24_26_29) $35$ #27# %62%
+	:m CPU(_r_30) $66$
+		:m Memoria RAM(_r_30_31) $61$
+			:g (_r_30_31_37) [1,*]
+				: 4GB(_r_30_31_37_38) $12$ #50# %27%
+				: 8GB(_r_30_31_37_39) $15$ #56# %46%
+				: 16GB(_r_30_31_37_40) $19$ #51# %29%
+				: 32GB(_r_30_31_37_41) $11$ #58# %51%
+				: 64GB(_r_30_31_37_42) $17$ #59# %99%
+		:m Procesador(_r_30_32) $63$
+			:g (_r_30_32_49) [1,*] 
+				: Intel(_r_30_32_49_50) $39$ #71# %49%
+				: AMD(_r_30_32_49_51) $37$ #36# %81%
+		:m Disco duro(_r_30_33) $33$
+			:g (_r_30_33_43) [1,*] 
+				: 500GB(_r_30_33_43_44) $27$ #27# %92%
+				: 1TB(_r_30_33_43_45) $29$ #24# %34%
+				: 2TB(_r_30_33_43_46) $22$ #29# %85%
+				: 5TB(_r_30_33_43_47) $26$ #54# %26%
+				: 10TB(_r_30_33_43_48) $21$ #85# %78%
+		:o Tarjeta grafica(_r_30_34) $20$
+			:g (_r_30_34_52) [1,*] 
+				: NVIDIA(_r_30_34_52_53) $8$ #25# %62%
+				: ATI(_r_30_34_52_54) $5$ #73# %82%
+	:o Pantalla(_r_35) $41$
+		:m Tamano(_r_35_55) $69$
+			:g (_r_35_55_57) [1,*] 
+				: 14(_r_35_55_57_58) $58$ #18# %37%
+				: 17(_r_35_55_57_59) $52$ #31# %96%
+				: 24(_r_35_55_57_60) $57$ #48# %33%
+		:m Tecnologia(_r_35_56) $31$
+			:g (_r_35_56_61) [1,1] 
+				: 3D(_r_35_56_61_62) $33$ #11# %64%
+				: 4K(_r_35_56_61_63) $38$ #22# %87%
+	:o Planta(_r_36) $49$ #27# %39%
+</feature_tree>
+<constraints>
+constraint_8:~_r_30_31_37_38 or ~_r_30_31_37_39 or ~_r_30_31_37_40 or ~_r_1_64_67
+constraint_10:~_r_4_17_18_21_25 or _r_3_68_72
+constraint_9:~_r_30_33_43_44 or ~_r_30_33_43_45 or ~_r_30_33_43_46 or ~_r_1_64_67
+constraint_11:~_r_4_17_24 or ~_r_1_64_65 or ~_r_1_64_66
+constraint_12:~_r_30_31_37_41 or ~_r_30_31_37_42 or ~_r_1_64_65 or ~_r_1_64_66
+constraint_7:_r_4_17_24_26_27 or _r_4_17_24_26_28 or _r_4_17_24_26_29 or ~_r_1_64_67
+constraint_13:~_r_30_33_43_47 or ~_r_30_33_43_48 or ~_r_1_64_65 or ~_r_1_64_66
+constraint_5:_r_35 or ~_r_1_64_66
+constraint_3:~_r_1_64_66 or ~_r_3_68_73
+</constraints>
+</feature_model>

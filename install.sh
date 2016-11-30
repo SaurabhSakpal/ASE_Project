@@ -1,5 +1,7 @@
 #!/bin/bash
 
-
+sudo apt-get install python-pip
+sudo apt-get install python-dev
 sudo pip install pycosat
-sudo pip install numpy
+sudo apt-get install python-scipy
+sudo apt-get install python-matplotlib

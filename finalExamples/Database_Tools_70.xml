@@ -1,0 +1,98 @@
+<!-- This model was created online using SPLOT's Feature Model Editor (http://www.splot-research.org) on Sun, Apr 8, 2012 - 5:58 PM  -->
+<feature_model name="DATABASE_TOOLS">
+<meta>
+<data name="description">FM_Exercise</data>
+<data name="creator">Eduardo Nóbrega</data>
+<data name="address"></data>
+<data name="email">eggn@cin.ufpe.br</data>
+<data name="phone"></data>
+<data name="website"></data>
+<data name="organization">CIN/UFPE</data>
+<data name="department"></data>
+<data name="date"></data>
+<data name="reference"></data>
+</meta>
+<feature_tree>
+:r database_tools(_r) $72$
+	:o Create_and_Alter_wizard(_r_2) $44$
+		:o Database(_r_2_69) $51$ #29# %21%
+		:o Table(_r_2_70) $27$ #72# %27%
+		:o Procedure(_r_2_71) $29$ #77# %29%
+		:o Trigger(_r_2_72) $26$ #79# %91%
+	:o Browse(_r_4) $66$
+		:o Database(_r_4_73) $92$ #46# %29%
+		:o Table(_r_4_74) $80$ #49# %81%
+		:o Procedure(_r_4_75) $81$ #47# %48%
+		:o Trigger(_r_4_76) $89$ #41# %31%
+	:o Auto_Completion(_r_5) $93$ #42# %50%
+	:o Syntax_colored(_r_6) $88$ #48# %70%
+	:o Multi_server_support(_r_7) $54$ #47# %33%
+	:o User_manager(_r_10) $53$ #42# %61%
+	:o Plugin(_r_11) $59$ #59# %70%
+	:o Compare(_r_12) $47$ #86# %92%
+	:o Import(_r_13) $44$
+		:g (_r_13_36) [1,*]
+			: SQL script(_r_13_36_37) $32$ #61# %61%
+			: Excel multi-sheet(_r_13_36_38) $39$ #69# %69%
+			: XML(_r_13_36_39) $37$ #63# %39%
+			: XSD(_r_13_36_40) $35$ #60# %41%
+			: CSV(_r_13_36_41) $30$ #49# %48%
+			: HTML(_r_13_36_42) $31$ #12# %40%
+			: JPG(_r_13_36_43) $37$ #19# %70%
+			: PNG(_r_13_36_44) $34$ #27# %71%
+	:o Debugger(_r_16) $22$
+		:g (_r_16_47) [1,*]
+			: Oracle(_r_16_47_48) $87$ #62# %28%
+			: MySQL(_r_16_47_49) $82$ #50# %29%
+			: Sybase(_r_16_47_50) $89$ #31# %41%
+			: MS SQL Server(_r_16_47_51) $81$ #29# %66%
+			: IBM DB2(_r_16_47_52) $84$ #78# %11%
+	:o Source_Control(_r_17) $90$
+		:g (_r_17_53) [1,*]
+			: SVN(_r_17_53_54) $96$ #71# %5%
+			: CVS(_r_17_53_56) $92$ #39# %36%
+			: Microsoft Visual SourceSafe(_r_17_53_57) $91$ #29# %20%
+			: Merant PVCS(_r_17_53_58) $99$ #61# %78%
+			:  MKS Source Integrity(_r_17_53_59) $93$ #49# %71%
+			:  ClearCase(_r_17_53_60) $94$ #29# %40%
+			: StarTeam(_r_17_53_61) $98$ #27# %38%
+			:  TFS(_r_17_53_62) $90$ #11# %71%
+			: VSS(_r_17_53_63) $93$ #30# %20%
+	:o Export(_r_19) $50$
+		:g (_r_19_25) [1,*]
+			: CSV(_r_19_25_26) $51$ #10# %33%
+			: SQL Script(_r_19_25_27) $55$ #28# %40%
+			: Excel(_r_19_25_28) $59$ #71# %39%
+			: XML(_r_19_25_29) $52$ #73# %81%
+			: Bulk SQL Script(_r_19_25_30) $53$ #48# %73%
+			: ODS(_r_19_25_31) $58$ #29# %82%
+			: TXT(_r_19_25_32) $57$ #83# %40%
+			: DBF(_r_19_25_33) $51$ #50# %51%
+	:m OS(_r_64) $39$
+		:g (_r_64_65) [1,*]
+			: Windows(_r_64_65_66) $33$ #71# %30%
+			: Linux(_r_64_65_67) $37$ #29# %28%
+			: Mac OS X(_r_64_65_68) $36$ #49# %91%
+	:m Programming_Language(_r_77) $30$
+		:g (_r_77_80) [1,1]
+			: C SHARP(_r_77_80_81) $27$ #28# %39%
+			: Java(_r_77_80_82) $22$ #27# %10%
+			: C PLUS PLUS(_r_77_80_83) $28$ #94# %48%
+			: PHP(_r_77_80_84) $25$ #71# %71%
+			: JavaScript(_r_77_80_85) $21$ #70# %20%
+			: Object Pascal(_r_77_80_86) $27$ #74# %44%
+	:m Database(_r_87) $47$
+		:g (_r_87_88) [1,*] 
+			: Oracle(_r_87_88_89) $41$ #38# %56%
+			: MySQL(_r_87_88_90) $40$ #29# %51%
+			: Postgre SQL(_r_87_88_91) $42$ #16# %29%
+			: SQL Server(_r_87_88_92) $46$ #51# %89%
+			: ODBC(_r_87_88_93) $44$ #70# %61%
+			: JDBC(_r_87_88_94) $48$ #39# %33%
+			: SQLight(_r_87_88_95) $45$ #61# %30%
+</feature_tree>
+<constraints>
+constraint_4:_r_64_65_66 or ~_r_77_80_81
+constraint_3:~_r_77_80_81 or ~_r_77_80_82 or ~_r_77_80_83 or ~_r_77_80_84 or ~_r_77_80_86
+</constraints>
+</feature_model>
