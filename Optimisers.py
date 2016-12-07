@@ -1,6 +1,4 @@
-from deap import base
-from deap import creator
-from deap import tools
+from deap import base, creator, tools
 from GAMethods import *
 import random
 from collections import defaultdict
