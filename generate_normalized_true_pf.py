@@ -20,7 +20,6 @@ for dr in os.listdir(path_to_output):
 	for file in os.listdir(path_obtained_pf):
 		model_name = file.split('_')[-1]
 		f = open(path_obtained_pf+'/'+file,'r')
-		print(path_obtained_pf+'/'+file,'r')
 		content = [tuple(map(float,line.split(' '))) for line in f]
 		reference_set.extend(content)
 		retain_size = len(content)

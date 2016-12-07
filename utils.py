@@ -1,5 +1,5 @@
 import sys
-from Constraint import Constraint
+from parse.Constraint import Constraint
 from scipy.spatial import distance
 import math
 
