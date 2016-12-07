@@ -21,7 +21,7 @@ To obtain true pareto frontiers for evaluation on performance measures like Spre
 ``` python generate_normalized_true_pf.py <path_to_output_folder>```  
   * path_to_output_folder : This is path to the folder output_<modelname> generated in step 2  
 4. **Calculate performace metric**  
-Calculate Hypervolume, Spread, IGD using following commands  
+Calculate Hypervolume, Spread, IGD using following commands. The code for generating this metric is taken from [here](https://github.com/ai-se/Spread-HyperVolume)    
 ``` cd <path_to_repo>/Performance/```  
 ```python ./HyperVolume/hypervolume_runner <path_to_output_folder>```  
 ```python ./Spread/spread_runner <path_to_output_folder>```  
@@ -32,6 +32,7 @@ Output will be generate as
 5. **Analyze performance**  
 Each file generate above will have metric for all optimizers on the performance metric across different runs. These files canbe given as input to the stats.py for analysis.  
 ```cat spread_database | python stats.py```  
+Stats.py file is taken from [this](https://github.com/txt/ase16/blob/master/src/stats.py) repo.
 
 
 
